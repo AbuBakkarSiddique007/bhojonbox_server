@@ -49,12 +49,37 @@ async function seedAdmin() {
 
     console.log("Admin seeded successfully:", adminData.email);
 
+    // Seed categories
+    await seedCategories();
+
   } catch (error: any) {
     console.error("Error seeding admin:", error?.message || error);
-    
+
   } finally {
     await prisma.$disconnect();
   }
+}
+
+async function seedCategories() {
+  const categories = [
+    { name: "Bangladeshi" },
+    { name: "Chinese" },
+    { name: "Italian" },
+    { name: "Indian" },
+    { name: "Fast Food" },
+    { name: "Desserts" },
+    { name: "Beverages" },
+    { name: "Healthy" },
+  ];
+
+  for (const cat of categories) {
+    await prisma.category.upsert({
+      where: { name: cat.name },
+      update: {},
+      create: cat,
+    });
+  }
+  console.log("Categories seeded successfully.");
 }
 
 seedAdmin();

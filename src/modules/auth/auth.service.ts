@@ -11,6 +11,9 @@ const createUser = async (data: {
     role?: Role;
     phone?: string;
     address?: string;
+    storeName?: string;
+    cuisine?: string;
+    description?: string;
 }) => {
 
     const existing = await prisma.user.findUnique({ where: { email: data.email } });
@@ -21,15 +24,29 @@ const createUser = async (data: {
 
     const hashedPassword = await bcrypt.hash(data.password, 12);
 
+    const isProvider = data.role === Role.PROVIDER;
+
     const user = await prisma.user.create({
         data: {
             name: data.name,
             email: data.email,
             password: hashedPassword,
-            role: data.role === Role.PROVIDER ? Role.PROVIDER : Role.CUSTOMER,
+            role: isProvider ? Role.PROVIDER : Role.CUSTOMER,
             phone: data.phone,
             address: data.address,
+            ...(isProvider && {
+                providerProfile: {
+                    create: {
+                        storeName: data.storeName || data.name,
+                        cuisine: data.cuisine,
+                        description: data.description,
+                        address: data.address,
+                        phone: data.phone,
+                    },
+                },
+            }),
         },
+        include: { providerProfile: true },
     });
 
     const { password: _, ...safe } = user;

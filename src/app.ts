@@ -2,6 +2,8 @@ import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { authRouter } from "./modules/auth/auth.route";
+import { providerRouter } from "./modules/provider/provider.route";
+import { categoryRouter } from "./modules/category/category.route";
 
 const app: Application = express();
 
@@ -18,6 +20,12 @@ app.use(cookieParser());
 
 // Auth routes
 app.use("/api/auth", authRouter);
+
+// Provider routes
+app.use("/api/providers", providerRouter);
+
+// Category routes
+app.use("/api/categories", categoryRouter);
 
 
 

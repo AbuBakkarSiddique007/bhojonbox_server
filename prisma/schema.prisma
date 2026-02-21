@@ -32,5 +32,35 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  providerProfile ProviderProfile?
+
   @@map("users")
+}
+
+model ProviderProfile {
+  id          String  @id @default(uuid())
+  userId      String  @unique
+  storeName   String
+  description String?
+  cuisine     String?
+  logo        String?
+  address     String?
+  phone       String?
+  isOpen      Boolean @default(true)
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("provider_profiles")
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("categories")
 }

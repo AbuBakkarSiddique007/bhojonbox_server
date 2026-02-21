@@ -16,7 +16,7 @@ const setTokenCookie = (res: Response, token: string) => {
 
 const register = async (req: Request, res: Response) => {
     try {
-        const { name, email, password, role, phone, address } = req.body;
+        const { name, email, password, role, phone, address, storeName, cuisine, description } = req.body;
 
         if (!name || !email || !password) {
             res.status(400).json({
@@ -26,7 +26,7 @@ const register = async (req: Request, res: Response) => {
             return;
         }
 
-        const user = await authService.createUser({ name, email, password, role, phone, address });
+        const user = await authService.createUser({ name, email, password, role, phone, address, storeName, cuisine, description });
 
 
         const token = generateToken(user.id, user.role);
