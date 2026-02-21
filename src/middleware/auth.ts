@@ -48,11 +48,17 @@ export const authenticate = async (
   }
 };
 
-// Check if user has required role
+// Check if user has required role:
 export const authorize = (...roles: string[]) => {
   return (req: AuthRequest, res: Response, next: NextFunction): void => {
+
     if (!req.user || !roles.includes(req.user.role)) {
-      res.status(403).json({ message: "Forbidden" });
+      res.status(403).json({ 
+
+        message: `Forbidden: Your role '${req.user?.role || "unknown"}' does not have access. Required: ${roles.join(" or ")}`,
+
+       });
+       
       return;
     }
     next();
