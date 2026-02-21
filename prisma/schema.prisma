@@ -49,6 +49,7 @@ model ProviderProfile {
   isOpen      Boolean @default(true)
 
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  meals     Meal[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -61,6 +62,27 @@ model Category {
   image     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  meals     Meal[]
 
   @@map("categories")
+}
+
+model Meal {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  price       Float
+  image       String?
+  isAvailable Boolean @default(true)
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  providerId String
+  provider   ProviderProfile @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("meals")
 }

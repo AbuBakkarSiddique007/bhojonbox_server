@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import { authRouter } from "./modules/auth/auth.route";
 import { providerRouter } from "./modules/provider/provider.route";
 import { categoryRouter } from "./modules/category/category.route";
+import { mealRouter } from "./modules/meal/meal.route";
 
 const app: Application = express();
 
@@ -26,6 +27,10 @@ app.use("/api/providers", providerRouter);
 
 // Category routes
 app.use("/api/categories", categoryRouter);
+
+
+// Meal routes
+app.use("/api/meals", mealRouter);
 
 
 
