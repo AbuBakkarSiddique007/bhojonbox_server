@@ -34,6 +34,7 @@ model User {
 
   providerProfile ProviderProfile?
   orders           Order[]
+  reviews          Review[]
 
   @@map("users")
 }
@@ -92,6 +93,7 @@ model Meal {
   provider   ProviderProfile @relation(fields: [providerId], references: [id], onDelete: Cascade)
 
   orderItems OrderItem[]
+  reviews    Review[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -111,6 +113,7 @@ model Order {
   user     User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   provider ProviderProfile @relation(fields: [providerId], references: [id], onDelete: Cascade)
   items    OrderItem[]
+  review   Review?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -129,4 +132,24 @@ model OrderItem {
   meal  Meal  @relation(fields: [mealId], references: [id])
 
   @@map("order_items")
+}
+
+model Review {
+  id      String @id @default(uuid())
+  rating  Int
+  comment String?
+
+  userId  String
+  mealId  String
+  orderId String @unique
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  meal  Meal  @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, mealId, orderId])
+  @@map("reviews")
 }
