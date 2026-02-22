@@ -12,3 +12,5 @@ generated
 # Build outputs
 build
 dist
+
+API_CHECKLIST.md

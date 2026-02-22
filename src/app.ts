@@ -7,6 +7,7 @@ import { categoryRouter } from "./modules/category/category.route";
 import { mealRouter } from "./modules/meal/meal.route";
 import { orderRouter } from "./modules/order/order.route";
 import { reviewRouter } from "./modules/review/review.route";
+import { adminRouter } from "./modules/admin/admin.route";
 
 const app: Application = express();
 
@@ -39,6 +40,9 @@ app.use("/api/orders", orderRouter);
 
 // Review routes
 app.use("/api/reviews", reviewRouter);
+
+// Admin routes
+app.use("/api/admin", adminRouter);
 
 
 // Health check
