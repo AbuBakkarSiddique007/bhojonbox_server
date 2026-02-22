@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { AuthRequest } from "../../middleware/auth.js";
 import { adminService } from "./admin.service.js";
+import { sendResponse, handleError } from "../../utils/sendResponse.js";
 
 
 const getAllUsers = async (req: Request, res: Response) => {
@@ -12,13 +13,12 @@ const getAllUsers = async (req: Request, res: Response) => {
             limit: req.query.limit as string,
         });
 
-        res.status(200).json(result);
-
-    } catch (err: any) {
-        res.status(500).json({
-            message: "Failed to fetch all users",
-            error: err.message,
+        sendResponse(res, {
+            message: "Users fetched successfully",
+            data: result,
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch all users");
     }
 };
 
@@ -27,20 +27,12 @@ const getUserById = async (req: Request, res: Response) => {
     try {
         const user = await adminService.getUserById(req.params.id as string);
 
-        res.status(200).json({ user });
-
-    } catch (err: any) {
-        if (err.status) {
-            res.status(err.status).json({
-                message: err.message
-            });
-
-            return;
-        }
-        res.status(500).json({
-            message: "Failed to fetch user by ID",
-            error: err.message,
+        sendResponse(res, {
+            message: "User fetched successfully",
+            data: { user },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch user by ID");
     }
 };
 
@@ -49,22 +41,12 @@ const toggleUserStatus = async (req: Request, res: Response) => {
     try {
         const user = await adminService.toggleUserStatus(req.params.id as string);
 
-        res.status(200).json({
-            user,
+        sendResponse(res, {
             message: user.isActive ? "User activated" : "User suspended",
+            data: { user },
         });
     } catch (err: any) {
-        if (err.status) {
-            res.status(err.status).json({
-                message: err.message
-            });
-
-            return;
-        }
-        res.status(500).json({
-            message: "Failed to toggle user status",
-            error: err.message,
-        });
+        handleError(res, err, "Failed to toggle user status");
     }
 };
 
@@ -74,31 +56,21 @@ const changeUserRole = async (req: Request, res: Response) => {
         const { role } = req.body;
 
         if (!role || !["CUSTOMER", "PROVIDER"].includes(role)) {
-            res.status(400).json({
+            return sendResponse(res, {
+                statusCode: 400,
+                success: false,
                 message: "Valid role is required (CUSTOMER or PROVIDER)",
             });
-            return;
         }
 
         const user = await adminService.changeUserRole(req.params.id as string, role);
 
-        res.status(200).json({
-            user,
-            message: `Role changed to ${role}`
+        sendResponse(res, {
+            message: `Role changed to ${role}`,
+            data: { user },
         });
-
     } catch (err: any) {
-        if (err.status) {
-            res.status(err.status).json({
-                message: err.message
-            });
-
-            return;
-        }
-        res.status(500).json({
-            message: "Failed to change user role",
-            error: err.message,
-        });
+        handleError(res, err, "Failed to change user role");
     }
 };
 
@@ -111,12 +83,12 @@ const getAllOrders = async (req: Request, res: Response) => {
             limit: req.query.limit as string,
         });
 
-        res.status(200).json(result);
-    } catch (err: any) {
-        res.status(500).json({
-            message: "Failed to fetch all orders",
-            error: err.message,
+        sendResponse(res, {
+            message: "Orders fetched successfully",
+            data: result,
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch all orders");
     }
 };
 
@@ -125,12 +97,12 @@ const getDashboardStats = async (_req: Request, res: Response) => {
     try {
         const stats = await adminService.getDashboardStats();
 
-        res.status(200).json({ stats });
-    } catch (err: any) {
-        res.status(500).json({
-            message: "Failed to fetch dashboard stats",
-            error: err.message,
+        sendResponse(res, {
+            message: "Dashboard stats fetched successfully",
+            data: { stats },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch dashboard stats");
     }
 };
 

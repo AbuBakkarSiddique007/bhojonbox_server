@@ -1,16 +1,17 @@
 import { Request, Response } from "express";
 import { categoryService } from "./category.service.js";
+import { sendResponse, handleError } from "../../utils/sendResponse.js";
 
 
 const getAllCategories = async (_req: Request, res: Response) => {
     try {
         const categories = await categoryService.getAllCategories();
-        res.json({ categories });
-    } catch (err: any) {
-        res.status(500).json({ 
-            message: "Failed to fetch all categories",
-            error: err.message
+        sendResponse(res, {
+            message: "Categories fetched successfully",
+            data: { categories },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch all categories");
     }
 };
 
@@ -19,15 +20,18 @@ const getCategoryById = async (req: Request, res: Response) => {
     try {
         const category = await categoryService.getCategoryById(req.params.id as string);
         if (!category) {
-            res.status(404).json({ message: "Category not found" });
-            return;
+            return sendResponse(res, {
+                statusCode: 404,
+                success: false,
+                message: "Category not found",
+            });
         }
-        res.json({ category });
-    } catch (err: any) {
-        res.status(500).json({ 
-            message: "Failed to fetch single category",
-            error: err.message
+        sendResponse(res, {
+            message: "Category fetched successfully",
+            data: { category },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch single category");
     }
 };
 
@@ -36,30 +40,29 @@ const createCategory = async (req: Request, res: Response) => {
     try {
         const { name, image } = req.body;
         if (!name) {
-            res.status(400).json({ 
+            return sendResponse(res, {
+                statusCode: 400,
+                success: false,
                 message: "Category name is required",
-                error: "Name is required"
             });
-            return;
         }
 
         const category = await categoryService.createCategory({ name, image });
-        
-        res.status(201).json({ category });
 
+        sendResponse(res, {
+            statusCode: 201,
+            message: "Category created successfully",
+            data: { category },
+        });
     } catch (err: any) {
         if (err.code === "P2002") {
-            res.status(400).json({ 
+            return sendResponse(res, {
+                statusCode: 400,
+                success: false,
                 message: "Category already exists",
-                error: err.message
             });
-            return;
         }
-        
-        res.status(500).json({ 
-            message: "Failed to create category",
-            error: err.message
-        });
+        handleError(res, err, "Failed to create category");
     }
 };
 
@@ -69,13 +72,12 @@ const updateCategory = async (req: Request, res: Response) => {
         const { name, image } = req.body;
         const category = await categoryService.updateCategory(req.params.id as string, { name, image });
 
-        res.json({ category });
-
-    } catch (err: any) {
-        res.status(500).json({ 
-            message: "Failed to update category",
-            error: err.message
+        sendResponse(res, {
+            message: "Category updated successfully",
+            data: { category },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to update category");
     }
 };
 
@@ -84,15 +86,11 @@ const deleteCategory = async (req: Request, res: Response) => {
     try {
         await categoryService.deleteCategory(req.params.id as string);
 
-        res.json({ 
-            message: "Category deleted" 
+        sendResponse(res, {
+            message: "Category deleted successfully",
         });
-
     } catch (err: any) {
-        res.status(500).json({ 
-            message: "Failed to delete category",
-            error: err.message
-        });
+        handleError(res, err, "Failed to delete category");
     }
 };
 

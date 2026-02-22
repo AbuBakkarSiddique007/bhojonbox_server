@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { AuthRequest } from "../../middleware/auth.js";
 import { orderService } from "./order.service.js";
+import { sendResponse, handleError } from "../../utils/sendResponse.js";
 
 
 const createOrder = async (req: AuthRequest, res: Response) => {
@@ -8,10 +9,11 @@ const createOrder = async (req: AuthRequest, res: Response) => {
         const { providerId, deliveryAddress, note, items } = req.body;
 
         if (!providerId || !deliveryAddress || !items || !items.length) {
-            res.status(400).json({
+            return sendResponse(res, {
+                statusCode: 400,
+                success: false,
                 message: "providerId, deliveryAddress and items are required",
             });
-            return;
         }
 
         const order = await orderService.createOrder(req.user!.id, {
@@ -21,20 +23,13 @@ const createOrder = async (req: AuthRequest, res: Response) => {
             items,
         });
 
-        res.status(201).json({ order });
-
-    } catch (err: any) {
-        if (err.status) {
-            res.status(err.status).json({ 
-                message: err.message 
-            });
-            
-            return;
-        }
-        res.status(500).json({
-            message: "Failed to create order",
-            error: err.message,
+        sendResponse(res, {
+            statusCode: 201,
+            message: "Order created successfully",
+            data: { order },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to create order");
     }
 };
 
@@ -43,12 +38,12 @@ const getMyOrders = async (req: AuthRequest, res: Response) => {
     try {
         const orders = await orderService.getMyOrders(req.user!.id);
 
-        res.status(200).json({ orders });
-    } catch (err: any) {
-        res.status(500).json({
-            message: "Failed to fetch orders",
-            error: err.message,
+        sendResponse(res, {
+            message: "Orders fetched successfully",
+            data: { orders },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch orders");
     }
 };
 
@@ -61,18 +56,12 @@ const getOrderById = async (req: AuthRequest, res: Response) => {
             req.user!.role
         );
 
-        res.status(200).json({ order });
-    } catch (err: any) {
-        if (err.status) {
-            res.status(err.status).json({ 
-                message: err.message 
-            });
-            return;
-        }
-        res.status(500).json({
-            message: "Failed to fetch order",
-            error: err.message,
+        sendResponse(res, {
+            message: "Order fetched successfully",
+            data: { order },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch order");
     }
 };
 
@@ -84,18 +73,12 @@ const getProviderOrders = async (req: AuthRequest, res: Response) => {
             req.query.status as string
         );
 
-        res.status(200).json({ orders });
-    } catch (err: any) {
-        if (err.status) {
-            res.status(err.status).json({ 
-                message: err.message 
-            });
-            return;
-        }
-        res.status(500).json({
-            message: "Failed to fetch provider orders",
-            error: err.message,
+        sendResponse(res, {
+            message: "Provider orders fetched successfully",
+            data: { orders },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch provider orders");
     }
 };
 
@@ -105,8 +88,11 @@ const updateOrderStatus = async (req: AuthRequest, res: Response) => {
         const { status } = req.body;
 
         if (!status) {
-            res.status(400).json({ message: "Status is required" });
-            return;
+            return sendResponse(res, {
+                statusCode: 400,
+                success: false,
+                message: "Status is required",
+            });
         }
 
         const order = await orderService.updateOrderStatus(
@@ -115,18 +101,12 @@ const updateOrderStatus = async (req: AuthRequest, res: Response) => {
             status
         );
 
-        res.status(200).json({ order });
-    } catch (err: any) {
-        if (err.status) {
-            res.status(err.status).json({ 
-                message: err.message 
-            });
-            return;
-        }
-        res.status(500).json({
-            message: "Failed to update order status",
-            error: err.message,
+        sendResponse(res, {
+            message: "Order status updated successfully",
+            data: { order },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to update order status");
     }
 };
 
@@ -138,16 +118,12 @@ const cancelOrder = async (req: AuthRequest, res: Response) => {
             req.params.id as string
         );
 
-        res.status(200).json({ order, message: "Order cancelled" });
-    } catch (err: any) {
-        if (err.status) {
-            res.status(err.status).json({ message: err.message });
-            return;
-        }
-        res.status(500).json({
-            message: "Failed to cancel order",
-            error: err.message,
+        sendResponse(res, {
+            message: "Order cancelled successfully",
+            data: { order },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to cancel order");
     }
 };
 

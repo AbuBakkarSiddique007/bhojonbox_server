@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { AuthRequest } from "../../middleware/auth.js";
 import { mealService } from "./meal.service.js";
+import { sendResponse, handleError } from "../../utils/sendResponse.js";
 
 
 const getAllMeals = async (req: Request, res: Response) => {
@@ -15,13 +16,12 @@ const getAllMeals = async (req: Request, res: Response) => {
             limit: req.query.limit as string,
         });
 
-        res.status(200).json(result);
-
-    } catch (err: any) {
-        res.status(500).json({
-            message: "Failed to all fetch meals",
-            error: err.message,
+        sendResponse(res, {
+            message: "Meals fetched successfully",
+            data: result,
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch all meals");
     }
 };
 
@@ -32,20 +32,19 @@ const getMealById = async (req: Request, res: Response) => {
         const meal = await mealService.getMealById(req.params.id as string);
 
         if (!meal) {
-            res.status(404).json({
-                message: "Meal not found"
+            return sendResponse(res, {
+                statusCode: 404,
+                success: false,
+                message: "Meal not found",
             });
-
-            return;
         }
 
-        res.status(200).json({ meal });
-
-    } catch (err: any) {
-        res.status(500).json({
-            message: "Failed to fetch meal by ID",
-            error: err.message,
+        sendResponse(res, {
+            message: "Meal fetched successfully",
+            data: { meal },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch meal by ID");
     }
 };
 
@@ -55,20 +54,12 @@ const getMyMeals = async (req: AuthRequest, res: Response) => {
     try {
         const meals = await mealService.getMealsByProvider(req.user!.id);
 
-        res.status(200).json({ meals });
-
-    } catch (err: any) {
-        if (err.status) {
-            res.status(err.status).json({ 
-                message: err.message 
-            });
-
-            return;
-        }
-        res.status(500).json({
-            message: "Failed to fetch provider meals",
-            error: err.message,
+        sendResponse(res, {
+            message: "Provider meals fetched successfully",
+            data: { meals },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch provider meals");
     }
 };
 
@@ -79,10 +70,11 @@ const createMeal = async (req: AuthRequest, res: Response) => {
         const { name, description, price, image, categoryId, isAvailable } = req.body;
 
         if (!name || !price || !categoryId) {
-            res.status(400).json({
+            return sendResponse(res, {
+                statusCode: 400,
+                success: false,
                 message: "Name, price and categoryId are required",
             });
-            return;
         }
 
         const meal = await mealService.createMeal(req.user!.id, {
@@ -94,16 +86,13 @@ const createMeal = async (req: AuthRequest, res: Response) => {
             isAvailable,
         });
 
-        res.status(201).json({ meal });
-    } catch (err: any) {
-        if (err.status) {
-            res.status(err.status).json({ message: err.message });
-            return;
-        }
-        res.status(500).json({
-            message: "Failed to create meal",
-            error: err.message,
+        sendResponse(res, {
+            statusCode: 201,
+            message: "Meal created successfully",
+            data: { meal },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to create meal");
     }
 };
 
@@ -122,16 +111,12 @@ const updateMeal = async (req: AuthRequest, res: Response) => {
             isAvailable,
         });
 
-        res.json({ meal });
-    } catch (err: any) {
-        if (err.status) {
-            res.status(err.status).json({ message: err.message });
-            return;
-        }
-        res.status(500).json({
-            message: "Failed to update meal",
-            error: err.message,
+        sendResponse(res, {
+            message: "Meal updated successfully",
+            data: { meal },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to update meal");
     }
 };
 
@@ -140,22 +125,12 @@ const updateMeal = async (req: AuthRequest, res: Response) => {
 const deleteMeal = async (req: AuthRequest, res: Response) => {
     try {
         await mealService.deleteMeal(req.user!.id, req.params.id as string);
-        res.status(200).json({ 
-            message: "Meal deleted" 
-        });
 
+        sendResponse(res, {
+            message: "Meal deleted successfully",
+        });
     } catch (err: any) {
-        if (err.status) {
-            res.status(err.status).json({ 
-                message: err.message 
-            });
-
-            return;
-        }
-        res.status(500).json({
-            message: "Failed to delete meal",
-            error: err.message,
-        });
+        handleError(res, err, "Failed to delete meal");
     }
 };
 

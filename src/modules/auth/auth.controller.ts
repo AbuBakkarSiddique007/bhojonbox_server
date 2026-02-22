@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { AuthRequest } from "../../middleware/auth.js";
 import { generateToken } from "../../utils/jwt.js";
+import { sendResponse, handleError } from "../../utils/sendResponse.js";
 import { authService } from "./auth.service.js";
 
 
@@ -19,35 +20,26 @@ const register = async (req: Request, res: Response) => {
         const { name, email, password, role, phone, address, storeName, cuisine, description } = req.body;
 
         if (!name || !email || !password) {
-            res.status(400).json({
-                message: "Name, email and password are required"
+            return sendResponse(res, {
+                statusCode: 400,
+                success: false,
+                message: "Name, email and password are required",
             });
-
-            return;
         }
 
         const user = await authService.createUser({ name, email, password, role, phone, address, storeName, cuisine, description });
 
-
         const token = generateToken(user.id, user.role);
         setTokenCookie(res, token);
 
-
-        res.status(201).json({
-            user,
-            token
+        sendResponse(res, {
+            statusCode: 201,
+            message: "User registered successfully",
+            data: { user, token },
         });
 
     } catch (err: any) {
-        if (err.status) return res.status(err.status).json({ 
-            message: err.message 
-        });
-
-        console.error("Register error:", err);
-
-        res.status(500).json({ 
-            message: "Server error" 
-        });
+        handleError(res, err, "Server error");
     }
 };
 
@@ -56,50 +48,49 @@ const login = async (req: Request, res: Response) => {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            res.status(400).json({ 
-                message: "Email and password are required" 
+            return sendResponse(res, {
+                statusCode: 400,
+                success: false,
+                message: "Email and password are required",
             });
-            return;
         }
 
         const user = await authService.verifyUser(email, password);
         const token = generateToken(user.id, user.role);
         setTokenCookie(res, token);
 
-        res.json({ user, token });
+        sendResponse(res, {
+            message: "Logged in successfully",
+            data: { user, token },
+        });
 
     } catch (err: any) {
-        if (err.status) return res.status(err.status).json({ 
-            message: err.message 
-        });
-        console.error("Login error:", err);
-        res.status(500).json({ 
-            message: "Server error" 
-        });
+        handleError(res, err, "Server error");
     }
 };
 
 const getMe = async (req: AuthRequest, res: Response) => {
     try {
         const user = await authService.findUserById(req.user!.id);
-        if (!user) { res.status(404).json({ 
-            message: "User not found" 
-        }); 
-        return; 
-    }
-        res.json({ user });
+
+        if (!user) {
+            return sendResponse(res, {
+                statusCode: 404,
+                success: false,
+                message: "User not found",
+            });
+        }
+
+        sendResponse(res, { data: { user } });
+
     } catch (err: any) {
-        res.status(500).json({ 
-            message: "Server error" 
-        });
+        handleError(res, err, "Server error");
     }
 };
 
 const logout = async (_req: Request, res: Response) => {
     res.clearCookie("token");
-    res.json({ 
-        message: "Logged out successfully" 
-    });
+    sendResponse(res, { message: "Logged out successfully" });
 };
 
 
@@ -107,11 +98,14 @@ const updateProfile = async (req: AuthRequest, res: Response) => {
     try {
         const { name, phone, address, avatar } = req.body;
         const user = await authService.updateUser(req.user!.id, { name, phone, address, avatar });
-        res.json({ user });
-    } catch (err: any) {
-        res.status(500).json({ 
-            message: "Server error" 
+
+        sendResponse(res, {
+            message: "Profile updated",
+            data: { user },
         });
+
+    } catch (err: any) {
+        handleError(res, err, "Server error");
     }
 };
 

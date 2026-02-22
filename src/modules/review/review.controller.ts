@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { AuthRequest } from "../../middleware/auth.js";
 import { reviewService } from "./review.service.js";
+import { sendResponse, handleError } from "../../utils/sendResponse.js";
 
 
 const createReview = async (req: AuthRequest, res: Response) => {
@@ -8,19 +9,19 @@ const createReview = async (req: AuthRequest, res: Response) => {
         const { mealId, orderId, rating, comment } = req.body;
 
         if (!mealId || !orderId || !rating) {
-            res.status(400).json({
+            return sendResponse(res, {
+                statusCode: 400,
+                success: false,
                 message: "mealId, orderId and rating are required",
             });
-
-            return;
         }
 
         if (rating < 1 || rating > 5) {
-            res.status(400).json({
+            return sendResponse(res, {
+                statusCode: 400,
+                success: false,
                 message: "Rating must be between 1 and 5",
             });
-
-            return;
         }
 
         const review = await reviewService.createReview(req.user!.id, {
@@ -30,20 +31,13 @@ const createReview = async (req: AuthRequest, res: Response) => {
             comment,
         });
 
-        res.status(201).json({ review });
-
-    } catch (err: any) {
-        if (err.status) {
-            res.status(err.status).json({ 
-                message: err.message 
-            });
-
-            return;
-        }
-        res.status(500).json({
-            message: "Failed to create review",
-            error: err.message,
+        sendResponse(res, {
+            statusCode: 201,
+            message: "Review created successfully",
+            data: { review },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to create review");
     }
 };
 
@@ -52,13 +46,12 @@ const getReviewsByMeal = async (req: Request, res: Response) => {
     try {
         const result = await reviewService.getReviewsByMeal(req.params.mealId as string);
 
-        res.status(200).json(result);
-        
-    } catch (err: any) {
-        res.status(500).json({
-            message: "Failed to fetch reviews",
-            error: err.message,
+        sendResponse(res, {
+            message: "Reviews fetched successfully",
+            data: result,
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch reviews");
     }
 };
 
@@ -68,16 +61,19 @@ const getReviewById = async (req: Request, res: Response) => {
         const review = await reviewService.getReviewById(req.params.id as string);
 
         if (!review) {
-            res.status(404).json({ message: "Review not found" });
-            return;
+            return sendResponse(res, {
+                statusCode: 404,
+                success: false,
+                message: "Review not found",
+            });
         }
 
-        res.status(200).json({ review });
-    } catch (err: any) {
-        res.status(500).json({
-            message: "Failed to fetch review",
-            error: err.message,
+        sendResponse(res, {
+            message: "Review fetched successfully",
+            data: { review },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch review");
     }
 };
 
@@ -86,12 +82,12 @@ const getMyReviews = async (req: AuthRequest, res: Response) => {
     try {
         const reviews = await reviewService.getMyReviews(req.user!.id);
 
-        res.status(200).json({ reviews });
-    } catch (err: any) {
-        res.status(500).json({
-            message: "Failed to fetch my reviews",
-            error: err.message,
+        sendResponse(res, {
+            message: "My reviews fetched successfully",
+            data: { reviews },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch my reviews");
     }
 };
 
@@ -101,10 +97,11 @@ const updateReview = async (req: AuthRequest, res: Response) => {
         const { rating, comment } = req.body;
 
         if (rating && (rating < 1 || rating > 5)) {
-            res.status(400).json({
+            return sendResponse(res, {
+                statusCode: 400,
+                success: false,
                 message: "Rating must be between 1 and 5",
             });
-            return;
         }
 
         const review = await reviewService.updateReview(req.user!.id, req.params.id as string, {
@@ -112,18 +109,12 @@ const updateReview = async (req: AuthRequest, res: Response) => {
             comment,
         });
 
-        res.status(200).json({ review });
-    } catch (err: any) {
-        if (err.status) {
-            res.status(err.status).json({ 
-                message: err.message 
-            });
-            return;
-        }
-        res.status(500).json({
-            message: "Failed to update review",
-            error: err.message,
+        sendResponse(res, {
+            message: "Review updated successfully",
+            data: { review },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to update review");
     }
 };
 
@@ -132,18 +123,11 @@ const deleteReview = async (req: AuthRequest, res: Response) => {
     try {
         await reviewService.deleteReview(req.user!.id, req.params.id as string, req.user!.role);
 
-        res.status(200).json({ message: "Review deleted" });
-    } catch (err: any) {
-        if (err.status) {
-            res.status(err.status).json({ 
-                message: err.message 
-            });
-            return;
-        }
-        res.status(500).json({
-            message: "Failed to delete review",
-            error: err.message,
+        sendResponse(res, {
+            message: "Review deleted successfully",
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to delete review");
     }
 };
 

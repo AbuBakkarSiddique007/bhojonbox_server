@@ -1,17 +1,16 @@
 import { Request, Response } from "express";
 import { AuthRequest } from "../../middleware/auth.js";
+import { sendResponse, handleError } from "../../utils/sendResponse.js";
 import { providerService } from "./provider.service.js";
 
 
 const getAllProviders = async (_req: Request, res: Response) => {
     try {
         const providers = await providerService.getAllProviders();
-        res.json({ providers });
-    } catch (error: any) {
-        res.status(500).json({ 
-            message: "Failed to fetch providers",
-            error: error.message 
-        });
+
+        sendResponse(res, { data: { providers } });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch providers");
     }
 };
 
@@ -19,16 +18,18 @@ const getAllProviders = async (_req: Request, res: Response) => {
 const getProviderById = async (req: Request, res: Response) => {
     try {
         const provider = await providerService.getProviderById(req.params.id as string);
+
         if (!provider) {
-            res.status(404).json({ message: "Provider not found" });
-            return;
+            return sendResponse(res, {
+                statusCode: 404,
+                success: false,
+                message: "Provider not found",
+            });
         }
-        res.json({ provider });
-    } catch (error: any) {
-        res.status(500).json({ 
-            message: "Failed to fetch provider by ID",
-            error: error.message 
-        });
+
+        sendResponse(res, { data: { provider } });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch provider by ID");
     }
 };
 
@@ -36,16 +37,18 @@ const getProviderById = async (req: Request, res: Response) => {
 const getMyProfile = async (req: AuthRequest, res: Response) => {
     try {
         const profile = await providerService.getProfileByUserId(req.user!.id);
+
         if (!profile) {
-            res.status(404).json({ message: "Provider profile not found" });
-            return;
+            return sendResponse(res, {
+                statusCode: 404,
+                success: false,
+                message: "Provider profile not found",
+            });
         }
-        res.json({ profile });
-    } catch (error: any) {
-        res.status(500).json({ 
-            message: "Failed to fetch provider profile",
-            error: error.message 
-        });
+
+        sendResponse(res, { data: { profile } });
+    } catch (err: any) {
+        handleError(res, err, "Failed to fetch provider profile");
     }
 };
 
@@ -56,12 +59,13 @@ const updateMyProfile = async (req: AuthRequest, res: Response) => {
         const profile = await providerService.updateProfile(req.user!.id, {
             storeName, description, cuisine, logo, address, phone, isOpen,
         });
-        res.json({ profile });
-    } catch (error: any) {
-        res.status(500).json({ 
-            message: "Failed to update provider profile",
-            error: error.message 
+
+        sendResponse(res, {
+            message: "Profile updated",
+            data: { profile },
         });
+    } catch (err: any) {
+        handleError(res, err, "Failed to update provider profile");
     }
 };
 
