@@ -8,6 +8,7 @@ import { mealRouter } from "./modules/meal/meal.route";
 import { orderRouter } from "./modules/order/order.route";
 import { reviewRouter } from "./modules/review/review.route";
 import { adminRouter } from "./modules/admin/admin.route";
+import { notFound } from "./middleware/notFound";
 
 const app: Application = express();
 
@@ -53,5 +54,10 @@ app.get("/", (_req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+
+
+// Error handling for unknown routes:
+app.use(notFound);
 
 export default app;
