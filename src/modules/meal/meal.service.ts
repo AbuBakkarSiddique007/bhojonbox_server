@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma";
+import paginationAndSortingHelper from "../../utils/sortingAndPaginationHelpers.js";
 
 
 const getAllMeals = async (query: {
@@ -30,9 +31,7 @@ const getAllMeals = async (query: {
         if (query.maxPrice) where.price.lte = parseFloat(query.maxPrice);
     }
 
-    const page = parseInt(query.page || "1");
-    const limit = parseInt(query.limit || "12");
-    const skip = (page - 1) * limit;
+    const { page, limit, skip, sortBy, sortOrder } = paginationAndSortingHelper(query);
 
 
     const [meals, total] = await Promise.all([
@@ -44,7 +43,7 @@ const getAllMeals = async (query: {
             },
             skip,
             take: limit,
-            orderBy: { createdAt: "desc" },
+            orderBy: { [sortBy]: sortOrder },
         }),
         prisma.meal.count({ where }),
     ]);
