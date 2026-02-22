@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma";
+import paginationAndSortingHelper from "../../utils/sortingAndPaginationHelpers.js";
 
 
 const getAllUsers = async (query: {
@@ -26,9 +27,7 @@ const getAllUsers = async (query: {
         ];
     }
 
-    const page = parseInt(query.page || "1");
-    const limit = parseInt(query.limit || "20");
-    const skip = (page - 1) * limit;
+    const { page, limit, skip, sortBy, sortOrder } = paginationAndSortingHelper(query);
 
     const [users, total] = await Promise.all([
         prisma.user.findMany({
@@ -45,7 +44,7 @@ const getAllUsers = async (query: {
             },
             skip,
             take: limit,
-            orderBy: { createdAt: "desc" },
+            orderBy: { [sortBy]: sortOrder },
         }),
         prisma.user.count({ where }),
     ]);
@@ -155,9 +154,7 @@ const getAllOrders = async (query: {
 
     if (query.status) where.status = query.status;
 
-    const page = parseInt(query.page || "1");
-    const limit = parseInt(query.limit || "20");
-    const skip = (page - 1) * limit;
+    const { page, limit, skip, sortBy, sortOrder } = paginationAndSortingHelper(query);
 
     const [orders, total] = await Promise.all([
         prisma.order.findMany({
@@ -167,15 +164,12 @@ const getAllOrders = async (query: {
                 provider: { select: { id: true, storeName: true } },
                 items: { include: { meal: { select: { id: true, name: true } } } },
             },
-
             skip,
             take: limit,
-            orderBy: { createdAt: "desc" },
-
+            orderBy: { [sortBy]: sortOrder },
         }),
         prisma.order.count({ where }),
     ]);
-
 
     return {
         orders,
