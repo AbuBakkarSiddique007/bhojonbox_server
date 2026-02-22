@@ -93,7 +93,7 @@ const getAllOrders = async (req: Request, res: Response) => {
 };
 
 
-const getDashboardStats = async (_req: Request, res: Response) => {
+const getDashboardStats = async (req: Request, res: Response) => {
     try {
         const stats = await adminService.getDashboardStats();
 

@@ -4,7 +4,7 @@ import { sendResponse, handleError } from "../../utils/sendResponse.js";
 import { providerService } from "./provider.service.js";
 
 
-const getAllProviders = async (_req: Request, res: Response) => {
+const getAllProviders = async (req: Request, res: Response) => {
     try {
         const providers = await providerService.getAllProviders();
 

@@ -3,7 +3,7 @@ import { categoryService } from "./category.service.js";
 import { sendResponse, handleError } from "../../utils/sendResponse.js";
 
 
-const getAllCategories = async (_req: Request, res: Response) => {
+const getAllCategories = async (req: Request, res: Response) => {
     try {
         const categories = await categoryService.getAllCategories();
         sendResponse(res, {

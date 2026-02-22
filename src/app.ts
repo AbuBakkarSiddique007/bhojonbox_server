@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { authRouter } from "./modules/auth/auth.route";
@@ -9,6 +9,7 @@ import { orderRouter } from "./modules/order/order.route";
 import { reviewRouter } from "./modules/review/review.route";
 import { adminRouter } from "./modules/admin/admin.route";
 import { notFound } from "./middleware/notFound";
+import globalErrorHandler from "./middleware/globalErrorHandler";
 
 const app: Application = express();
 
@@ -47,7 +48,7 @@ app.use("/api/admin", adminRouter);
 
 
 // Health check
-app.get("/", (_req: Request, res: Response) => {
+app.get("/", (req: Request, res: Response) => {
   res.json({
     message: "Welcome to BhoJonBox Server!",
     status: "ok",
@@ -59,5 +60,8 @@ app.get("/", (_req: Request, res: Response) => {
 
 // Error handling for unknown routes:
 app.use(notFound);
+
+// Global error handler:
+app.use(globalErrorHandler);
 
 export default app;

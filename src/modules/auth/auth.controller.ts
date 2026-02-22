@@ -88,7 +88,7 @@ const getMe = async (req: AuthRequest, res: Response) => {
     }
 };
 
-const logout = async (_req: Request, res: Response) => {
+const logout = async (req: Request, res: Response) => {
     res.clearCookie("token");
     sendResponse(res, { message: "Logged out successfully" });
 };
