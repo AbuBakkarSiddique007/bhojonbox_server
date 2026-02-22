@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { AuthRequest } from "../../middleware/auth.js";
-import { generateToken } from "../../utils/jwt.js";
+import { AuthRequest, generateToken } from "../../middleware/auth.js";
 import { sendResponse, handleError } from "../../utils/sendResponse.js";
 import { authService } from "./auth.service.js";
 
