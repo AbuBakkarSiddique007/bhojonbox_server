@@ -2,19 +2,24 @@
   "name": "bhojonbox_server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/server.ts",
     "seed": "tsx src/seedAdmin.ts",
     "studio": "prisma studio",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "postinstall": "npx prisma generate"
   },
   
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "@prisma/adapter-pg": "^7.4.1",
     "@prisma/client": "^7.4.1",

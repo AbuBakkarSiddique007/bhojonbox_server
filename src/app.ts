@@ -56,6 +56,15 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
+// Lightweight health endpoint for platform probes
+app.get("/healthz", (req: Request, res: Response) => {
+  res.json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    database: !!process.env.DATABASE_URL,
+  });
+});
+
 
 
 // Error handling for unknown routes:
