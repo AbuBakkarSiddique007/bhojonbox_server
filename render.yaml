@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: bhojonbox-server
+    env: node
+    region: oregon
+    branch: main
+    plan: free
+    buildCommand: npm ci && npm run build && npx prisma generate
+    startCommand: npm start
+    healthCheckPath: /healthz
+    # Add environment variables in the Render dashboard (DATABASE_URL, JWT_SECRET, etc.)
