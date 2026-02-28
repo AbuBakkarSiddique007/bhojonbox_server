@@ -1,8 +1,8 @@
-import { Router } from "express";
+import express from "express";
 import { authenticate, authorize } from "../../middleware/auth.js";
 import { categoryController } from "./category.controller.js";
 import { Role } from "../../../generated/prisma/enums.js";
-const router = Router();
+const router = express.Router();
 // Public routes:
 router.get("/", categoryController.getAllCategories);
 router.get("/:id", categoryController.getCategoryById);

@@ -16,7 +16,7 @@ const app: Application = express();
 const FRONTEND_URL = process.env.FRONTEND_URL;
 
 app.use(cors({
-  origin: (origin, callback) => {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     if (!origin) return callback(null, true);
     if (FRONTEND_URL) {
       if (origin === FRONTEND_URL) return callback(null, true);

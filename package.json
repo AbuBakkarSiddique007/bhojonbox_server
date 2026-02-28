@@ -9,6 +9,7 @@
     "seed": "tsx src/seedAdmin.ts",
     "studio": "prisma studio",
     "build": "tsc",
+    "render-build": "npm ci --include=dev && npm run build",
     "postbuild": "node scripts/fix-dist-imports.cjs",
     "start": "node dist/server.js",
     "postinstall": "npx prisma generate"

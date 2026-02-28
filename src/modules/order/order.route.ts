@@ -1,9 +1,9 @@
-import { Router } from "express";
+import express from "express";
 import { authenticate, authorize } from "../../middleware/auth.js";
 import { orderController } from "./order.controller.js";
 import { Role } from "../../../generated/prisma/enums.js";
 
-const router = Router();
+const router = express.Router();
 
 // Customer routes:
 router.post("/", authenticate, authorize(Role.CUSTOMER), orderController.createOrder);

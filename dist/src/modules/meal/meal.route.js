@@ -1,8 +1,8 @@
-import { Router } from "express";
+import express from "express";
 import { authenticate, authorize } from "../../middleware/auth.js";
 import { mealController } from "./meal.controller.js";
 import { Role } from "../../../generated/prisma/enums.js";
-const router = Router();
+const router = express.Router();
 // Public routes:
 router.get("/", mealController.getAllMeals);
 router.get("/provider/my-meals", authenticate, authorize(Role.PROVIDER), mealController.getMyMeals);

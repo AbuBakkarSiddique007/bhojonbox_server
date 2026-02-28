@@ -1,8 +1,8 @@
-import { Router } from "express";
+import express, { Request, Response } from "express";
 import { authenticate } from "../../middleware/auth.js";
 import { authController } from "./auth.controller.js";
 
-const router = Router();
+const router = express.Router();
 
 // Public routes:
 router.post("/register", authController.register);   
@@ -11,7 +11,7 @@ router.post("/login", authController.login);
 
 const ALLOW_DEBUG = process.env.NODE_ENV !== "production" || process.env.DEBUG_COOKIES === "true";
 if (ALLOW_DEBUG) {
-	router.get("/debug-cookie", (req, res) => {
+	router.get("/debug-cookie", (req: Request, res: Response) => {
  		const token = req.cookies?.token || null;
  		res.json({ receivedCookie: !!token, token: token ? "[REDACTED]" : null, origin: req.headers.origin || null });
  	});
