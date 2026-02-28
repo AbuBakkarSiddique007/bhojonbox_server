@@ -13,11 +13,12 @@ function walk(dir) {
 
 function fixFile(file) {
   let content = fs.readFileSync(file, 'utf8');
-  content = content.replace(/(from\s+['"])(\.\/[^'"\n]+?)(['"])/g, (m, p1, p2, p3) => {
+  // Handle any relative import starting with a dot (./ or ../...)
+  content = content.replace(/(from\s+['"])(\.[^'"\n]+?)(['"])/g, (m, p1, p2, p3) => {
     if (/\.[a-zA-Z0-9]+$/.test(p2)) return m;
     return p1 + p2 + '.js' + p3;
   });
-  content = content.replace(/(import\(\s*['"])(\.\/[^'"\n]+?)(['"]\s*\))/g, (m, p1, p2, p3) => {
+  content = content.replace(/(import\(\s*['"])(\.[^'"\n]+?)(['"]\s*\))/g, (m, p1, p2, p3) => {
     if (/\.[a-zA-Z0-9]+$/.test(p2)) return m;
     return p1 + p2 + '.js' + p3;
   });
@@ -40,3 +41,26 @@ try {
 } catch (e) {
   // ignore
 }
+
+// Report any remaining imports without `.js` to help debugging
+try {
+  const bad = [];
+  const glob = require('glob');
+  const files = glob.sync(path.join(__dirname, '..', 'dist', '**', '*.js'));
+  for (const f of files) {
+    const c = fs.readFileSync(f, 'utf8');
+    if (/from\s+['"][^'"\n]+?\.\.?\//.test(c)) {
+      // skip
+    }
+    const m = c.match(/from\s+['"](\.[^'"\n]+?)['"]/g);
+    if (m) {
+      for (const mm of m) {
+        if (!/\.js['"]$/.test(mm)) bad.push(`${f}: ${mm}`);
+      }
+    }
+  }
+  if (bad.length) {
+    console.log('Remaining imports without .js:');
+    bad.slice(0, 50).forEach(x => console.log(x));
+  }
+} catch (e) {}
