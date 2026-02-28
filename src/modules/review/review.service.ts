@@ -39,7 +39,7 @@ const createReview = async (userId: string, data: {
 
 
     // Verify the meal was part of this order:
-    const mealInOrder = order.items.some((item) => item.mealId === data.mealId);
+    const mealInOrder = order.items.some((item: any) => item.mealId === data.mealId);
 
 
     if (!mealInOrder) {
@@ -115,7 +115,7 @@ const getReviewsByMeal = async (mealId: string) => {
     // Calculate average rating:
     const totalRatings = reviews.length;
     const averageRating = totalRatings > 0
-        ? reviews.reduce((sum, r) => sum + r.rating, 0) / totalRatings
+        ? reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / totalRatings
         : 0;
 
     return {

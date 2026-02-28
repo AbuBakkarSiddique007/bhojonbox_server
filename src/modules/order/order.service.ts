@@ -23,8 +23,8 @@ const createOrder = async (userId: string, data: {
     }
 
     // 2. Calculate total amount based on meal prices and quantities:
-    const totalAmount = data.items.reduce((sum, item) => {
-        const meal = meals.find((m) => m.id === item.mealId);
+    const totalAmount = data.items.reduce((sum: number, item: { mealId: string; quantity: number }) => {
+        const meal = meals.find((m: any) => m.id === item.mealId);
         return sum + (meal!.price * item.quantity);
     }, 0);
 
@@ -36,8 +36,8 @@ const createOrder = async (userId: string, data: {
             note: data.note,
             totalAmount,
             items: {
-                create: data.items.map((item) => {
-                    const meal = meals.find((m) => m.id === item.mealId)!;
+                    create: data.items.map((item) => {
+                    const meal = meals.find((m: any) => m.id === item.mealId)!;
                     return {
                         mealId: item.mealId,
                         quantity: item.quantity,

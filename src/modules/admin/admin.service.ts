@@ -222,10 +222,10 @@ const getDashboardStats = async () => {
         meals: totalMeals,
         orders: {
             total: totalOrders,
-            byStatus: ordersByStatus.reduce((acc: any, item) => {
-                acc[item.status] = item._count._all;
-                return acc;
-            }, {}),
+            byStatus: ordersByStatus.reduce((acc: Record<string, number>, item: { status: string; _count: { _all: number } }) => {
+                    acc[item.status] = item._count._all;
+                    return acc;
+                }, {}),
         },
         revenue: totalRevenue._sum.totalAmount || 0,
         reviews: totalReviews,
