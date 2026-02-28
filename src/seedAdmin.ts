@@ -2,7 +2,7 @@ import "dotenv/config";
 import { prisma } from "./lib/prisma.js";
 import { Role } from "../generated/prisma/enums.js";
 
-const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT || 5000}`;
+const BASE_URL = process.env.BASE_URL || "https://bhojonbox-server.onrender.com";
 
 
 async function seedAdmin() {
