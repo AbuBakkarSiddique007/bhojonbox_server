@@ -11,17 +11,17 @@ import { adminRouter } from "./modules/admin/admin.route.js";
 import { notFound } from "./middleware/notFound.js";
 import globalErrorHandler from "./middleware/globalErrorHandler.js";
 const app = express();
-// Middleware:
-const allowedOrigins = [
-    process.env.FRONTEND_URL || "https://bhojonbox-client.vercel.app",
-];
+const FRONTEND_URL = process.env.FRONTEND_URL;
 app.use(cors({
     origin: (origin, callback) => {
         if (!origin)
             return callback(null, true);
-        if (allowedOrigins.includes(origin))
-            return callback(null, true);
-        return callback(new Error("CORS policy: This origin is not allowed."));
+        if (FRONTEND_URL) {
+            if (origin === FRONTEND_URL)
+                return callback(null, true);
+            return callback(new Error("CORS policy: This origin is not allowed."));
+        }
+        return callback(null, true);
     },
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
