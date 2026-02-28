@@ -64,3 +64,22 @@ try {
     bad.slice(0, 50).forEach(x => console.log(x));
   }
 } catch (e) {}
+
+  // Replace common localhost fallbacks with production URLs to avoid
+  // accidental local defaults in compiled files.
+  try {
+    const files = require('glob').sync(path.join(__dirname, '..', 'dist', '**', '*.js'));
+    for (const f of files) {
+      let c = fs.readFileSync(f, 'utf8');
+      const before = c;
+      c = c.replace(/http:\/\/localhost:3000/g, 'https://bhojonbox-client.vercel.app');
+      // Replace template fallback like `http://localhost:${process.env.PORT || 5000}`
+      c = c.replace(/process\.env\.BASE_URL\s*\|\|\s*`http:\/\/localhost:\$\{process\.env\.PORT\s*\|\|\s*5000\}`/g, 'process.env.BASE_URL || "https://bhojonbox-server.onrender.com"');
+      c = c.replace(/process\.env\.FRONTEND_URL\s*\|\|\s*"http:\/\/localhost:3000"/g, 'process.env.FRONTEND_URL || "https://bhojonbox-client.vercel.app"');
+      c = c.replace(/http:\/\/localhost:\d+/g, 'https://bhojonbox-server.onrender.com');
+      if (c !== before) fs.writeFileSync(f, c, 'utf8');
+    }
+    console.log('Replaced localhost fallbacks in dist');
+  } catch (e) {
+    // ignore
+  }

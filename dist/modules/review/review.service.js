@@ -1,5 +1,5 @@
-import { Role } from "../../../generated/prisma/enums";
-import { prisma } from "../../lib/prisma";
+import { Role } from "../../../generated/prisma/enums.js";
+import { prisma } from "../../lib/prisma.js";
 const createReview = async (userId, data) => {
     // Verify the order exists, belongs to this user, and is DELIVERED:
     const order = await prisma.order.findUnique({

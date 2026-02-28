@@ -1,4 +1,4 @@
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../../lib/prisma.js";
 import paginationAndSortingHelper from "../../utils/sortingAndPaginationHelpers.js";
 const getAllMeals = async (query) => {
     const where = {

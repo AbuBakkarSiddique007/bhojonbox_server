@@ -17,7 +17,7 @@ else {
 async function loadPrismaClientCtor() {
     const candidates = [
         // dev (ts-node / src): generated client path used during local dev
-        () => import("../../generated/prisma/client"),
+        () => import("../../generated/prisma/client.js"),
         // runtime after build: project-root/generated/prisma/client.js
         () => import(process.cwd() + "/generated/prisma/client"),
         // fallback to package @prisma/client

@@ -1,4 +1,4 @@
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../../lib/prisma.js";
 import { OrderStatus } from "../../../generated/prisma/enums.js";
 const createOrder = async (userId, data) => {
     // 1. Verify all meals exist and belong to the same provider:

@@ -8,7 +8,8 @@ const setTokenCookie = (res: Response, token: string) => {
     res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: "none",
+        path: "/",
         maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 };
@@ -88,7 +89,12 @@ const getMe = async (req: AuthRequest, res: Response) => {
 };
 
 const logout = async (req: Request, res: Response) => {
-    res.clearCookie("token");
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "none",
+        path: "/",
+    });
     sendResponse(res, { message: "Logged out successfully" });
 };
 
