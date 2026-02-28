@@ -28,6 +28,12 @@ app.use(cors({
     allowedHeaders: "Content-Type,Authorization",
     optionsSuccessStatus: 204,
 }));
+if (process.env.NODE_ENV !== "production") {
+    app.use((req, _res, next) => {
+        console.log("[dev] Incoming request:", req.method, req.path, "Origin:", req.headers.origin, "Cookie:", req.headers.cookie);
+        next();
+    });
+}
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
