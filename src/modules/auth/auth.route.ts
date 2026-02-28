@@ -4,11 +4,11 @@ import { authController } from "./auth.controller.js";
 
 const router = Router();
 
-// Public routes
+// Public routes:
 router.post("/register", authController.register);   
 router.post("/login", authController.login);         
 
-// Protected routes
+// Protected routes:
 router.get("/me", authenticate, authController.getMe);          
 router.post("/logout", authenticate, authController.logout);     
 router.put("/profile", authenticate, authController.updateProfile); 

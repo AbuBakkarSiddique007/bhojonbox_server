@@ -23,7 +23,7 @@ export interface AuthRequest extends Request {
   };
 }
 
-// Check if user is logged in
+// Check if user is logged in:
 export const authenticate = async (
   req: AuthRequest,
   res: Response,

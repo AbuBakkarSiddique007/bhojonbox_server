@@ -13,9 +13,9 @@ import globalErrorHandler from "./middleware/globalErrorHandler";
 
 const app: Application = express();
 
-// Middleware
+// Middleware:
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5000",
+  origin: process.env.FRONTEND_URL || "http://localhost:3000",
   credentials: true,
 }));
 
@@ -47,7 +47,7 @@ app.use("/api/reviews", reviewRouter);
 app.use("/api/admin", adminRouter);
 
 
-// Health check
+// Health check :
 app.get("/", (req: Request, res: Response) => {
   res.json({
     message: "Welcome to BhoJonBox Server!",

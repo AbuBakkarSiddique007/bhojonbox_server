@@ -7,10 +7,18 @@ const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT ||
 
 async function seedAdmin() {
   try {
+    const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+
+    if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
+      console.error("ADMIN_EMAIL and ADMIN_PASSWORD must be set in environment (.env). Aborting seeding.");
+      process.exit(1);
+    }
+
     const adminData = {
       name: "BhojonBox Admin",
-      email: "admin@bhojonbox.com",
-      password: "admin123",
+      email: ADMIN_EMAIL,
+      password: ADMIN_PASSWORD,
       role: Role.ADMIN,
     };
 
@@ -20,7 +28,6 @@ async function seedAdmin() {
     });
 
     if (existing) {
-      console.log("Admin already exists, skipping....");
       return;
     }
 
@@ -47,7 +54,6 @@ async function seedAdmin() {
       },
     });
 
-    console.log("Admin seeded successfully:", adminData.email);
 
     // Seed categories
     await seedCategories();
@@ -79,7 +85,6 @@ async function seedCategories() {
       create: cat,
     });
   }
-  console.log("Categories seeded successfully.");
 }
 
 seedAdmin();

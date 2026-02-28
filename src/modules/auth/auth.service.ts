@@ -3,7 +3,7 @@ import { prisma } from "../../lib/prisma.js";
 import { Role } from "../../../generated/prisma/enums.js";
 
 
-// Create new user (for registration)
+// Create new user (for registration):
 const createUser = async (data: {
     name: string;
     email: string;
@@ -54,7 +54,7 @@ const createUser = async (data: {
 };
 
 
-// Verify user credentials for login
+// Verify user credentials for login:
 const verifyUser = async (email: string, password: string) => {
 
     const user = await prisma.user.findUnique({
@@ -82,30 +82,45 @@ const verifyUser = async (email: string, password: string) => {
 };
 
 
-// Get user by id (no password)
+// Get user by id (no password):
 const findUserById = async (id: string) => {
     return prisma.user.findUnique({
         where: { id },
         select: {
-            id: true, name: true, email: true, role: true,
-            phone: true, address: true, avatar: true,
-            isActive: true, createdAt: true,
+            id: true, 
+            name: true, 
+            email: true, 
+            role: true,
+            phone: true, 
+            address: true, 
+            avatar: true,
+            isActive: true, 
+            createdAt: true,
         },
     });
 };
 
 
-// Update profile fields
+// Update profile fields:
 const updateUser = async (
     id: string,
-    data: { name?: string; phone?: string; address?: string; avatar?: string }
+    data: { 
+        name?: string; 
+        phone?: string; 
+        address?: string; 
+        avatar?: string }
 ) => {
     return prisma.user.update({
         where: { id },
         data,
         select: {
-            id: true, name: true, email: true, role: true,
-            phone: true, address: true, avatar: true,
+            id: true, 
+            name: true, 
+            email: true, 
+            role: true,
+            phone: true, 
+            address: true, 
+            avatar: true,
         },
     });
 };

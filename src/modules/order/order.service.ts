@@ -10,7 +10,6 @@ const createOrder = async (userId: string, data: {
 }) => {
 
     // 1. Verify all meals exist and belong to the same provider:
-
     const meals = await prisma.meal.findMany({
         where: {
             id: { in: data.items.map((i) => i.mealId) },
@@ -49,8 +48,17 @@ const createOrder = async (userId: string, data: {
         },
 
         include: {
-            items: { include: { meal: true } },
-            provider: { select: { id: true, storeName: true } },
+            items: { 
+                include: { 
+                    meal: true 
+                } 
+            },
+            provider: { 
+                select: { 
+                    id: true, 
+                    storeName: true,
+                    logo: true,
+                } },
         },
     });
 
@@ -62,8 +70,18 @@ const getMyOrders = async (userId: string) => {
     const orders = await prisma.order.findMany({
         where: { userId },
         include: {
-            items: { include: { meal: true } },
-            provider: { select: { id: true, storeName: true, logo: true } },
+            items: { 
+                include: { 
+                    meal: true 
+                } 
+            },
+            provider: { 
+                select: { 
+                    id: true, 
+                    storeName: true, 
+                    logo: true 
+                } 
+            },
         },
         orderBy: { createdAt: "desc" },
     });

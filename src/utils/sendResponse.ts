@@ -21,18 +21,19 @@ export function sendResponse(res: Response, {
 }
 
 export function handleError(res: Response, err: any, message: string) {
-    if (err.status) {
+    if (err && typeof err.status === "number") {
         return sendResponse(res, {
             statusCode: err.status,
             success: false,
-            message: err.message,
+            message: err.message || message,
         });
     }
+
+    console.error("Unhandled error:", err);
 
     sendResponse(res, {
         statusCode: 500,
         success: false,
-        message: message,
-        data: { error: err.message },
+        message: message || "Internal Server Error",
     });
 }

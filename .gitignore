@@ -1,5 +1,4 @@
 node_modules
-# Keep environment variables out of version control
 
 
 
@@ -13,4 +12,4 @@ generated
 build
 dist
 
-API_CHECKLIST.md
+.vercel
