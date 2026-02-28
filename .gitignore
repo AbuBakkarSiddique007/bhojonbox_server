@@ -9,8 +9,8 @@ generated
 
 
 # Build outputs
-build
-dist
+ build
+ 
 
 .vercel
 .vercel
