@@ -31,9 +31,10 @@ app.use(cors({
 }));
 
 
-if (process.env.NODE_ENV !== "production") {
+const DEBUG_COOKIES = process.env.DEBUG_COOKIES === "true";
+if (process.env.NODE_ENV !== "production" || DEBUG_COOKIES) {
   app.use((req: Request, _res: Response, next: NextFunction) => {
-    console.log("[dev] Incoming request:", req.method, req.path, "Origin:", req.headers.origin, "Cookie:", req.headers.cookie);
+    console.log("[debug] Incoming request:", req.method, req.path, "Origin:", req.headers.origin, "Cookie:", req.headers.cookie);
     next();
   });
 }

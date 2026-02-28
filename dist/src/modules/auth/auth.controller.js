@@ -2,9 +2,11 @@ import { generateToken } from "../../middleware/auth.js";
 import { sendResponse, handleError } from "../../utils/sendResponse.js";
 import { authService } from "./auth.service.js";
 const setTokenCookie = (res, token) => {
+    const frontend = process.env.FRONTEND_URL || "";
+    const secureFlag = process.env.NODE_ENV === "production" || frontend.startsWith("https://");
     res.cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: secureFlag,
         sameSite: "none",
         path: "/",
         maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -72,9 +74,11 @@ const getMe = async (req, res) => {
     }
 };
 const logout = async (req, res) => {
+    const frontend = process.env.FRONTEND_URL || "";
+    const secureFlag = process.env.NODE_ENV === "production" || frontend.startsWith("https://");
     res.clearCookie("token", {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: secureFlag,
         sameSite: "none",
         path: "/",
     });

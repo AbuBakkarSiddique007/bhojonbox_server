@@ -5,9 +5,12 @@ import { authService } from "./auth.service.js";
 
 
 const setTokenCookie = (res: Response, token: string) => {
+    const frontend = process.env.FRONTEND_URL || "";
+    const secureFlag = process.env.NODE_ENV === "production" || frontend.startsWith("https://");
+
     res.cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: secureFlag,
         sameSite: "none",
         path: "/",
         maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -89,9 +92,12 @@ const getMe = async (req: AuthRequest, res: Response) => {
 };
 
 const logout = async (req: Request, res: Response) => {
+    const frontend = process.env.FRONTEND_URL || "";
+    const secureFlag = process.env.NODE_ENV === "production" || frontend.startsWith("https://");
+
     res.clearCookie("token", {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: secureFlag,
         sameSite: "none",
         path: "/",
     });

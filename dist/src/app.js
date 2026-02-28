@@ -28,9 +28,10 @@ app.use(cors({
     allowedHeaders: "Content-Type,Authorization",
     optionsSuccessStatus: 204,
 }));
-if (process.env.NODE_ENV !== "production") {
+const DEBUG_COOKIES = process.env.DEBUG_COOKIES === "true";
+if (process.env.NODE_ENV !== "production" || DEBUG_COOKIES) {
     app.use((req, _res, next) => {
-        console.log("[dev] Incoming request:", req.method, req.path, "Origin:", req.headers.origin, "Cookie:", req.headers.cookie);
+        console.log("[debug] Incoming request:", req.method, req.path, "Origin:", req.headers.origin, "Cookie:", req.headers.cookie);
         next();
     });
 }

@@ -5,10 +5,11 @@ const router = Router();
 // Public routes:
 router.post("/register", authController.register);
 router.post("/login", authController.login);
-if (process.env.NODE_ENV !== "production") {
+const ALLOW_DEBUG = process.env.NODE_ENV !== "production" || process.env.DEBUG_COOKIES === "true";
+if (ALLOW_DEBUG) {
     router.get("/debug-cookie", (req, res) => {
         const token = req.cookies?.token || null;
-        res.json({ receivedCookie: !!token, token: token ? "[REDACTED]" : null });
+        res.json({ receivedCookie: !!token, token: token ? "[REDACTED]" : null, origin: req.headers.origin || null });
     });
 }
 // Protected routes:

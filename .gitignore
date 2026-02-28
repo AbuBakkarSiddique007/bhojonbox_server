@@ -10,6 +10,8 @@ generated
 
 # Build outputs
  build
+ dist
+ 
  
 
 .vercel
