@@ -26,3 +26,17 @@ function fixFile(file) {
 
 walk(path.join(__dirname, '..', 'dist'));
 console.log('Fixed import paths in dist');
+
+// Ensure root-level server imports point to dist/src when present
+try {
+  const serverPath = path.join(__dirname, '..', 'dist', 'server.js');
+  if (fs.existsSync(serverPath)) {
+    let srv = fs.readFileSync(serverPath, 'utf8');
+    srv = srv.replace("import app from \"./app.js\";", "import app from \"./src/app.js\";");
+    srv = srv.replace("import { prisma } from \"./lib/prisma.js\";", "import { prisma } from \"./src/lib/prisma.js\";");
+    fs.writeFileSync(serverPath, srv, 'utf8');
+    console.log('Patched root server imports to dist/src');
+  }
+} catch (e) {
+  // ignore
+}
