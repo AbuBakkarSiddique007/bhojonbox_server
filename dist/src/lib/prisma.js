@@ -1,5 +1,7 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
+import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 const connectionString = process.env.DATABASE_URL;
 let adapter = undefined;
 if (connectionString) {
@@ -16,12 +18,20 @@ else {
 // Resolve PrismaClient constructor dynamically so imports work from source and from `dist`.
 async function loadPrismaClientCtor() {
     const candidates = [
-        // dev (ts-node / src): generated client path used during local dev
-        () => import("../../generated/prisma/client.js"),
-        // runtime after build: project-root/generated/prisma/client.js
-        () => import(process.cwd() + "/generated/prisma/client"),
+        // dev (ts-node / src): generated client path used during local dev (resolve relative to this file)
+        async () => {
+            const __filename = fileURLToPath(import.meta.url);
+            const __dirname = path.dirname(__filename);
+            const p = path.resolve(__dirname, "../../generated/prisma/client.js");
+            return import(pathToFileURL(p).href);
+        },
+        // runtime after build: project-root/generated/prisma/client.js (absolute)
+        async () => {
+            const p = path.resolve(process.cwd(), "generated", "prisma", "client.js");
+            return import(pathToFileURL(p).href);
+        },
         // fallback to package @prisma/client
-        () => import("@prisma/client")
+        async () => import("@prisma/client")
     ];
     for (const get of candidates) {
         try {
