@@ -1,18 +1,17 @@
-import app from "./app.js";
-import { prisma } from "./lib/prisma.js";
-const port = process.env.PORT || 5000;
-async function run() {
+import app from "./app";
+import { envVars } from "./app/config/env.js";
+import { seedAdmin } from "./app/utils/seedAdmin.js";
+const bootstrap = async () => {
     try {
-        await prisma.$connect();
-        app.listen(port, () => {
-            console.log(`Server is running on port ${port}`);
+        await seedAdmin();
+        app.listen(Number(envVars.PORT), () => {
+            console.log(`Server is running on http://localhost:${envVars.PORT}`);
         });
     }
     catch (error) {
-        console.error("Failed to connect to the database:", error);
-        await prisma.$disconnect();
+        console.error("Failed to start server:", error);
         process.exit(1);
     }
-}
-run();
+};
+bootstrap();
 //# sourceMappingURL=server.js.map

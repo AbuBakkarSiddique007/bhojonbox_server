@@ -84,7 +84,7 @@ git clone https://github.com/AbuBakkarSiddique007/bhojonbox_server.git
 
 ```bash
 cd bhojonbox_server
-npm install
+pnpm install
 ```
 
 Create a `.env` file in `bhojonbox_server/`:
@@ -101,16 +101,16 @@ Run database migrations and seed admin (development):
 
 ```bash
 cd bhojonbox_server
-npx prisma migrate dev --name init
-npx prisma generate
+pnpx prisma migrate dev --name init
+pnpx prisma generate
 # run the project seed script
-npm run seed
+pnpm run seed
 ```
 
 Start the server in development:
 
 ```bash
-npm run dev
+pnpm run dev
 # Runs on http://localhost:5000 (by default)
 ```
 
@@ -120,7 +120,7 @@ npm run dev
 
 ```bash
 cd bhojonbox_client
-npm install
+pnpm install
 ```
 
 Client configuration
@@ -131,8 +131,8 @@ Start the client development server:
 
 ```bash
 cd bhojonbox_client
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 # Runs on http://localhost:3000
 ```
 
@@ -289,10 +289,10 @@ PLACED ──► PREPARING ──► READY ──► DELIVERED
 3. Recommended build command (uses project's helper script to include dev deps):
 
 ```
-npm run render-build && npx prisma migrate deploy
+pnpm run render-build && pnpx prisma migrate deploy
 ```
 
-4. Start command: `npm start`
+4. Start command: `pnpm start`
 5. Add environment variables on Render: `DATABASE_URL`, `JWT_SECRET`, `FRONTEND_URL=https://bhojonbox-client.vercel.app`, `NODE_ENV=production`
 
 ---

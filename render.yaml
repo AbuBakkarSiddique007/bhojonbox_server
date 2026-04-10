@@ -2,29 +2,24 @@ services:
   - type: web
     name: bhojonbox-server
     env: node
+    region: oregon
     branch: main
-    buildCommand: npm ci && npm run build
-    startCommand: npm start
+    plan: free
+    buildCommand: pnpm install --frozen-lockfile && pnpm run build && pnpx prisma generate
+    startCommand: pnpm start
+    healthCheckPath: /healthz
     envVars:
       - key: DATABASE_URL
         value: "<set-in-render-dashboard>"
-        type: secret
       - key: JWT_SECRET
         value: "<set-in-render-dashboard>"
-        type: secret
+      - key: ADMIN_EMAIL
+        value: "<set-in-render-dashboard>"
+      - key: ADMIN_PASSWORD
+        value: "<set-in-render-dashboard>"
       - key: FRONTEND_URL
         value: https://bhojonbox-client.vercel.app
       - key: BASE_URL
         value: https://bhojonbox-server.onrender.com
       - key: NODE_ENV
-        value: productionservices:
-  - type: web
-    name: bhojonbox-server
-    env: node
-    region: oregon
-    branch: main
-    plan: free
-    buildCommand: npm ci && npm run build && npx prisma generate
-    startCommand: npm start
-    healthCheckPath: /healthz
-    # Add environment variables in the Render dashboard (DATABASE_URL, JWT_SECRET, etc.)
+        value: production

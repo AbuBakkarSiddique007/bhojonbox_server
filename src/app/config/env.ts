@@ -1,0 +1,51 @@
+import dotenv from 'dotenv';
+import status from 'http-status';
+import AppError from '../errorHelpers/AppError';
+
+dotenv.config();
+
+interface EnvConfig {
+	NODE_ENV: string;
+	PORT: string;
+	DATABASE_URL: string;
+	ACCESS_TOKEN_SECRET: string;
+	REFRESH_TOKEN_SECRET?: string;
+	ACCESS_TOKEN_EXPIRES_IN?: string;
+	REFRESH_TOKEN_EXPIRES_IN?: string;
+	FRONTEND_URL?: string;
+	BASE_URL?: string;
+	ADMIN_EMAIL?: string;
+	ADMIN_PASSWORD?: string;
+	[key: string]: any;
+}
+
+const loadEnvVariables = (): EnvConfig => {
+	// Minimal required vars for this repo based on current .env
+	const required = ['NODE_ENV', 'PORT', 'DATABASE_URL'];
+
+	required.forEach((v) => {
+		if (!process.env[v]) {
+			throw new AppError(status.INTERNAL_SERVER_ERROR, `Environment variable ${v} is required but not set in .env file.`);
+		}
+	});
+
+	const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || process.env.JWT_SECRET || '';
+	const adminEmail = process.env.ADMIN_EMAIL || '';
+	const adminPassword = process.env.ADMIN_PASSWORD || '';
+
+	return {
+		NODE_ENV: process.env.NODE_ENV as string,
+		PORT: process.env.PORT as string,
+		DATABASE_URL: process.env.DATABASE_URL as string,
+		ACCESS_TOKEN_SECRET: accessTokenSecret,
+		REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || '',
+		ACCESS_TOKEN_EXPIRES_IN: process.env.ACCESS_TOKEN_EXPIRES_IN || '15m',
+		REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN || '7d',
+		FRONTEND_URL: process.env.FRONTEND_URL || process.env.BASE_URL || '',
+		BASE_URL: process.env.BASE_URL || '',
+		ADMIN_EMAIL: adminEmail,
+		ADMIN_PASSWORD: adminPassword,
+	};
+};
+
+export const envVars = loadEnvVariables();

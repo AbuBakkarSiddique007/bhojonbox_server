@@ -1,20 +1,18 @@
 {
-  "name": "bhojonbox_server",
+  "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/server.js",
+  "main": "dist/src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/server.ts",
-    "seed": "tsx src/seedAdmin.ts",
+    "seed": "tsx src/app/utils/seedAdmin.ts",
     "studio": "prisma studio",
     "build": "tsc",
-    "render-build": "npm ci --include=dev && npm run build",
-    "postbuild": "node scripts/fix-dist-imports.cjs",
-    "start": "node dist/server.js",
-    "postinstall": "npx prisma generate"
+    "render-build": "pnpm install --frozen-lockfile && pnpm run build",
+    "start": "node dist/src/server.js",
+    "postinstall": "pnpx prisma generate"
   },
-  
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -30,6 +28,7 @@
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.18.0"
   },

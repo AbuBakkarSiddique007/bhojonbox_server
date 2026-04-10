@@ -1,40 +1,28 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { authRouter } from "./modules/auth/auth.route.js";
-import { providerRouter } from "./modules/provider/provider.route.js";
-import { categoryRouter } from "./modules/category/category.route.js";
-import { mealRouter } from "./modules/meal/meal.route.js";
-import { orderRouter } from "./modules/order/order.route.js";
-import { reviewRouter } from "./modules/review/review.route.js";
-import { adminRouter } from "./modules/admin/admin.route.js";
-import { notFound } from "./middleware/notFound.js";
-import globalErrorHandler from "./middleware/globalErrorHandler.js";
+import { envVars } from "./app/config/env.js";
+import { authRouter } from "./app/modules/auth/auth.route.js";
+import { providerRouter } from "./app/modules/provider/provider.route.js";
+import { categoryRouter } from "./app/modules/category/category.route.js";
+import { mealRouter } from "./app/modules/meal/meal.route.js";
+import { orderRouter } from "./app/modules/order/order.route.js";
+import { reviewRouter } from "./app/modules/review/review.route.js";
+import { adminRouter } from "./app/modules/admin/admin.route.js";
+import { notFound } from "./app/middleware/notFound.js";
+import globalErrorHandler from "./app/middleware/globalErrorHandler.js";
 const app = express();
-const FRONTEND_URL = process.env.FRONTEND_URL;
 app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin)
-            return callback(null, true);
-        if (FRONTEND_URL) {
-            if (origin === FRONTEND_URL)
-                return callback(null, true);
-            return callback(new Error("CORS policy: This origin is not allowed."));
-        }
-        return callback(null, true);
-    },
+    origin: [
+        envVars.FRONTEND_URL,
+        envVars.BASE_URL,
+        "http://localhost:3000",
+        "http://localhost:5000",
+    ].filter(Boolean),
     credentials: true,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: "Content-Type,Authorization",
-    optionsSuccessStatus: 204,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
 }));
-const DEBUG_COOKIES = process.env.DEBUG_COOKIES === "true";
-if (process.env.NODE_ENV !== "production" || DEBUG_COOKIES) {
-    app.use((req, _res, next) => {
-        console.log("[debug] Incoming request:", req.method, req.path, "Origin:", req.headers.origin, "Cookie:", req.headers.cookie);
-        next();
-    });
-}
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -60,12 +48,11 @@ app.get("/", (req, res) => {
         timestamp: new Date().toISOString(),
     });
 });
-// Lightweight health endpoint for platform probes
 app.get("/healthz", (req, res) => {
     res.json({
         status: "ok",
         timestamp: new Date().toISOString(),
-        database: !!process.env.DATABASE_URL,
+        database: !!envVars.DATABASE_URL,
     });
 });
 // Error handling for unknown routes:
