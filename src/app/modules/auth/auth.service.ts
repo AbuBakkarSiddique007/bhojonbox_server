@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import status from 'http-status';
 import AppError from '../../errorHelpers/AppError.js';
 import { prisma } from "../../lib/prisma.js";
-import { Role } from "../../../../generated/prisma/enums.js";
+import { Role } from "../../../generated/prisma/enums.js";
 
 
 // Create new user (for registration):

@@ -6,6 +6,7 @@ node_modules
 
 /generated/prisma
 generated
+ /src/generated/prisma
 
 
 # Build outputs

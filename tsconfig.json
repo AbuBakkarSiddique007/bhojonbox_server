@@ -6,7 +6,7 @@
     "lib": ["ES2020"],
     "outDir": "./dist",
 
-    "rootDir": ".",
+    "rootDir": "src",
     "typeRoots": ["src/app/types", "./node_modules/@types"],
     
     "strict": true,

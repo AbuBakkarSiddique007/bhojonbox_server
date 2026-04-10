@@ -6,7 +6,7 @@ export declare const adminService: {
         limit?: string;
     }) => Promise<{
         users: {
-            role: import("../../../../generated/prisma/enums.js").Role;
+            role: import("../../../generated/prisma/enums.js").Role;
             id: string;
             email: string;
             name: string;
@@ -23,7 +23,7 @@ export declare const adminService: {
         };
     }>;
     getUserById: (userId: string) => Promise<{
-        role: import("../../../../generated/prisma/enums.js").Role;
+        role: import("../../../generated/prisma/enums.js").Role;
         id: string;
         email: string;
         name: string;
@@ -51,14 +51,14 @@ export declare const adminService: {
         };
     }>;
     toggleUserStatus: (userId: string) => Promise<{
-        role: import("../../../../generated/prisma/enums.js").Role;
+        role: import("../../../generated/prisma/enums.js").Role;
         id: string;
         email: string;
         name: string;
         isActive: boolean;
     }>;
     changeUserRole: (userId: string, role: string) => Promise<{
-        role: import("../../../../generated/prisma/enums.js").Role;
+        role: import("../../../generated/prisma/enums.js").Role;
         id: string;
         email: string;
         name: string;
@@ -96,7 +96,7 @@ export declare const adminService: {
             createdAt: Date;
             updatedAt: Date;
             providerId: string;
-            status: import("../../../../generated/prisma/enums.js").OrderStatus;
+            status: import("../../../generated/prisma/enums.js").OrderStatus;
             totalAmount: number;
             deliveryAddress: string;
             note: string | null;
@@ -134,7 +134,7 @@ export declare const adminService: {
             createdAt: Date;
             updatedAt: Date;
             providerId: string;
-            status: import("../../../../generated/prisma/enums.js").OrderStatus;
+            status: import("../../../generated/prisma/enums.js").OrderStatus;
             totalAmount: number;
             deliveryAddress: string;
             note: string | null;

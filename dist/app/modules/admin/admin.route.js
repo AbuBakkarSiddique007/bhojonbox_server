@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authenticate, authorize } from "../../middleware/auth.js";
 import { adminController } from "./admin.controller.js";
-import { Role } from "../../../../generated/prisma/enums.js";
+import { Role } from "../../../generated/prisma/enums.js";
 const router = Router();
 // Admin-only routes:
 router.use(authenticate, authorize(Role.ADMIN));
