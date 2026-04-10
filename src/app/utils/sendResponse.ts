@@ -1,6 +1,6 @@
 import type { Response } from "express";
 import status from 'http-status';
-import AppError from '../errorHelpers/AppError';
+import AppError from '../errorHelpers/AppError.js';
 
 type ResponseData = {
     statusCode?: number;

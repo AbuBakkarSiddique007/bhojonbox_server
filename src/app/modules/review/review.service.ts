@@ -1,7 +1,7 @@
-import { Role } from "../../../../generated/prisma/enums";
+import { Role } from "../../../../generated/prisma/enums.js";
 import status from 'http-status';
-import AppError from '../../errorHelpers/AppError';
-import { prisma } from "../../lib/prisma";
+import AppError from '../../errorHelpers/AppError.js';
+import { prisma } from "../../lib/prisma.js";
 
 
 const createReview = async (userId: string, data: {

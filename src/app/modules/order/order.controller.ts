@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import status from 'http-status';
-import { AuthRequest } from "../../middleware/auth";
+import { AuthRequest } from "../../middleware/auth.js";
 import { orderService } from "./order.service.js";
-import { sendResponse, handleError } from "../../utils/sendResponse";
+import { sendResponse, handleError } from "../../utils/sendResponse.js";
 
 
 const createOrder = async (req: AuthRequest, res: Response) => {

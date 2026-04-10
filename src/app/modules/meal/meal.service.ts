@@ -1,7 +1,7 @@
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../../lib/prisma.js";
 import status from 'http-status';
-import AppError from '../../errorHelpers/AppError';
-import paginationAndSortingHelper from "../../utils/sortingAndPaginationHelpers";
+import AppError from '../../errorHelpers/AppError.js';
+import paginationAndSortingHelper from "../../utils/sortingAndPaginationHelpers.js";
 
 
 const getAllMeals = async (query: {

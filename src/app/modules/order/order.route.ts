@@ -1,10 +1,10 @@
-import express from "express";
-import type { Router } from 'express';
-import { authenticate, authorize } from "../../middleware/auth";
-import { orderController } from "./order.controller";
-import { Role } from "../../../../generated/prisma/enums";
 
-const router = express.Router();
+import { authenticate, authorize } from "../../middleware/auth.js";
+import { orderController } from "./order.controller.js";
+import { Role } from "../../../../generated/prisma/enums.js";
+import { Router } from "express";
+
+const router = Router()
 
 // Customer routes:
 router.post("/", authenticate, authorize(Role.CUSTOMER), orderController.createOrder);
@@ -27,4 +27,4 @@ router.patch("/:id/status", authenticate, authorize(Role.PROVIDER), orderControl
 
 router.get("/:id", authenticate, orderController.getOrderById);
 
-export const orderRouter: Router = router;
+export const orderRouter = router;

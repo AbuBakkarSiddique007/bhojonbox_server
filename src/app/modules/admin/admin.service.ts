@@ -1,6 +1,6 @@
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../../lib/prisma.js";
 import httpStatus from 'http-status';
-import AppError from '../../errorHelpers/AppError';
+import AppError from '../../errorHelpers/AppError.js';
 import paginationAndSortingHelper from "../../utils/sortingAndPaginationHelpers.js";
 
 

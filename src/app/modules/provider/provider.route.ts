@@ -1,10 +1,10 @@
-import express from "express";
-import type { Router } from 'express';
-import { authenticate, authorize } from "../../middleware/auth";
-import { providerController } from "./provider.controller";
-import { Role } from "../../../../generated/prisma/enums";
 
-const router: Router = express.Router();
+import { authenticate, authorize } from "../../middleware/auth.js";
+import { providerController } from "./provider.controller.js";
+import { Role } from "../../../../generated/prisma/enums.js";
+import { Router } from "express";
+
+const router = Router()
 
 // Public routes
 router.get("/", providerController.getAllProviders);
@@ -15,4 +15,4 @@ router.put("/me/profile", authenticate, authorize(Role.PROVIDER), providerContro
 
 router.get("/:id", providerController.getProviderById);
 
-export const providerRouter: Router = router;
+export const providerRouter = router;

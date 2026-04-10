@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import status from 'http-status';
-import { AuthRequest } from "../../middleware/auth";
-import { reviewService } from "./review.service";
-import { sendResponse, handleError } from "../../utils/sendResponse";
+import { AuthRequest } from "../../middleware/auth.js";
+import { reviewService } from "./review.service.js";
+import { sendResponse, handleError } from "../../utils/sendResponse.js";
 
 
 const createReview = async (req: AuthRequest, res: Response) => {

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import status from 'http-status';
 import { categoryService } from "./category.service.js";
-import { sendResponse, handleError } from "../../utils/sendResponse";  
+import { sendResponse, handleError } from "../../utils/sendResponse.js";  
 
 
 const getAllCategories = async (req: Request, res: Response) => {

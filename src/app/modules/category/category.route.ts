@@ -1,10 +1,10 @@
-import express from "express";
-import type { Router } from 'express';
-import { authenticate, authorize } from "../../middleware/auth";
-import { categoryController } from "./category.controller.js";
-import { Role } from "../../../../generated/prisma/enums";
+import { Router } from "express";
 
-const router = express.Router();
+import { authenticate, authorize } from "../../middleware/auth.js";
+import { categoryController } from "./category.controller.js";
+import { Role } from "../../../../generated/prisma/enums.js";
+
+const router =Router()
 
 // Public routes:
 router.get("/", categoryController.getAllCategories);
@@ -18,4 +18,4 @@ router.put("/:id", authenticate, authorize(Role.ADMIN), categoryController.updat
 
 router.delete("/:id", authenticate, authorize(Role.ADMIN), categoryController.deleteCategory);
 
-export const categoryRouter: Router = router;
+export const categoryRouter = router;

@@ -1,10 +1,10 @@
-import express from "express";
-import type { Router } from 'express';
-import { authenticate, authorize } from "../../middleware/auth";
-import { reviewController } from "./review.controller";
-import { Role } from "../../../../generated/prisma/enums";
 
-const router = express.Router();
+import { authenticate, authorize } from "../../middleware/auth.js";
+import { reviewController } from "./review.controller.js";
+import { Role } from "../../../../generated/prisma/enums.js";
+import { Router } from "express";
+
+const router  = Router()
 
 // Public routes:
 router.get("/meal/:mealId", reviewController.getReviewsByMeal);
@@ -25,4 +25,4 @@ router.delete("/:id", authenticate, authorize(Role.CUSTOMER, Role.ADMIN), review
 // Get single review by ID (public):
 router.get("/:id", reviewController.getReviewById);
 
-export const reviewRouter: Router = router;
+export const reviewRouter = router;

@@ -1,7 +1,7 @@
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../../lib/prisma.js";
 import httpStatus from 'http-status';
-import AppError from '../../errorHelpers/AppError';
-import { OrderStatus } from "../../../../generated/prisma/enums";
+import AppError from '../../errorHelpers/AppError.js';
+import { OrderStatus } from "../../../../generated/prisma/enums.js";
 
 
 const createOrder = async (userId: string, data: {

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import status from 'http-status';
-import { AuthRequest } from "../../middleware/auth";
-import { sendResponse, handleError } from "../../utils/sendResponse";  
+import { AuthRequest } from "../../middleware/auth.js";
+import { sendResponse, handleError } from "../../utils/sendResponse.js";  
 import { providerService } from "./provider.service.js";
 
 

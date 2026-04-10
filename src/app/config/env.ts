@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import status from 'http-status';
-import AppError from '../errorHelpers/AppError';
+import AppError from '../errorHelpers/AppError.js';
 
 dotenv.config();
 
@@ -49,3 +49,13 @@ const loadEnvVariables = (): EnvConfig => {
 };
 
 export const envVars = loadEnvVariables();
+
+export const getEnvVars = (): EnvConfig => loadEnvVariables();
+
+export const requireEnv = (name: string): string => {
+	const value = process.env[name];
+	if (!value) {
+		throw new AppError(status.INTERNAL_SERVER_ERROR, `Environment variable ${name} is required but not set in .env file.`);
+	}
+	return value;
+};
