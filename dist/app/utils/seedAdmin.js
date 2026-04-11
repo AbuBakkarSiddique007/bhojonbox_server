@@ -1,5 +1,5 @@
 import { prisma } from "../lib/prisma.js";
-import { Role } from "../../generated/prisma/enums.js";
+import { Role } from "@prisma/client";
 import { envVars } from "../config/env.js";
 import bcrypt from 'bcryptjs';
 export async function seedAdmin() {

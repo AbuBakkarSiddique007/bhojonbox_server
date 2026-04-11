@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { Prisma } from "../../generated/prisma/client.js";
+import { Prisma } from "@prisma/client";
 import { sendResponse } from "../utils/sendResponse.js";
 
 function errorHandler(

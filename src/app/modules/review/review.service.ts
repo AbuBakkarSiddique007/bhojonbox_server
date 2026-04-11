@@ -1,4 +1,4 @@
-import { Role } from "../../../generated/prisma/enums.js";
+import { Role } from "@prisma/client";
 import status from 'http-status';
 import AppError from '../../errorHelpers/AppError.js';
 import { prisma } from "../../lib/prisma.js";

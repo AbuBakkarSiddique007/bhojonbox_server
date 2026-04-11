@@ -1,4 +1,4 @@
-import { Prisma } from "../../generated/prisma/client.js";
+import { Prisma } from "@prisma/client";
 import { sendResponse } from "../utils/sendResponse.js";
 function errorHandler(err, req, res, next) {
     let statusCode = err.status || 500;
