@@ -12,7 +12,7 @@
     "migrate": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
     "generate": "prisma generate",
-    "render-build": "pnpm generate && pnpm migrate:deploy && pnpm build",
+    "render-build": "pnpm generate && prisma migrate deploy && pnpm build",
     "studio": "prisma studio",
     "push": "prisma db push",
     "pull": "prisma db pull",

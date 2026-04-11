@@ -5,7 +5,7 @@ services:
     region: oregon
     branch: main
     plan: free
-    buildCommand: pnpm install --frozen-lockfile && pnpm run build && pnpx prisma generate
+    buildCommand: pnpm install --frozen-lockfile && pnpm run render-build
     startCommand: pnpm start
     healthCheckPath: /healthz
     envVars:

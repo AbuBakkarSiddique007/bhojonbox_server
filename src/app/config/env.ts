@@ -21,13 +21,15 @@ interface EnvConfig {
 
 const loadEnvVariables = (): EnvConfig => {
 	// Minimal required vars for this repo based on current .env
-	const required = ['NODE_ENV', 'PORT', 'DATABASE_URL'];
+	const required = ['NODE_ENV', 'DATABASE_URL'];
 
 	required.forEach((v) => {
 		if (!process.env[v]) {
-			throw new AppError(status.INTERNAL_SERVER_ERROR, `Environment variable ${v} is required but not set in .env file.`);
+			throw new AppError(status.INTERNAL_SERVER_ERROR, `Environment variable ${v} is required but not set.`);
 		}
 	});
+
+	const port = process.env.PORT || '5000';
 
 	const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || process.env.JWT_SECRET || '';
 	const adminEmail = process.env.ADMIN_EMAIL || '';
@@ -35,7 +37,7 @@ const loadEnvVariables = (): EnvConfig => {
 
 	return {
 		NODE_ENV: process.env.NODE_ENV as string,
-		PORT: process.env.PORT as string,
+		PORT: port,
 		DATABASE_URL: process.env.DATABASE_URL as string,
 		ACCESS_TOKEN_SECRET: accessTokenSecret,
 		REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || '',

@@ -4,18 +4,19 @@ import AppError from '../errorHelpers/AppError.js';
 dotenv.config();
 const loadEnvVariables = () => {
     // Minimal required vars for this repo based on current .env
-    const required = ['NODE_ENV', 'PORT', 'DATABASE_URL'];
+    const required = ['NODE_ENV', 'DATABASE_URL'];
     required.forEach((v) => {
         if (!process.env[v]) {
-            throw new AppError(status.INTERNAL_SERVER_ERROR, `Environment variable ${v} is required but not set in .env file.`);
+            throw new AppError(status.INTERNAL_SERVER_ERROR, `Environment variable ${v} is required but not set.`);
         }
     });
+    const port = process.env.PORT || '5000';
     const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || process.env.JWT_SECRET || '';
     const adminEmail = process.env.ADMIN_EMAIL || '';
     const adminPassword = process.env.ADMIN_PASSWORD || '';
     return {
         NODE_ENV: process.env.NODE_ENV,
-        PORT: process.env.PORT,
+        PORT: port,
         DATABASE_URL: process.env.DATABASE_URL,
         ACCESS_TOKEN_SECRET: accessTokenSecret,
         REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || '',
