@@ -231,6 +231,10 @@ const cancelOrder = async (userId: string, orderId: string) => {
         throw new AppError(httpStatus.BAD_REQUEST, "Can only cancel orders that are still PLACED");
     }
 
+    if (order.paymentStatus === "PAID") {
+        throw new AppError(httpStatus.BAD_REQUEST, "Cannot cancel an order that has already been paid online. Please contact support for refunds.");
+    }
+
     const cancelled = await prisma.order.update({
         where: { 
             id: orderId
