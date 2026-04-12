@@ -34,9 +34,11 @@
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "express-async-handler": "^1.2.0",
     "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.3",
-    "pg": "^8.18.0"
+    "pg": "^8.18.0",
+    "stripe": "^22.0.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

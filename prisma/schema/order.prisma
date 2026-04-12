@@ -3,6 +3,8 @@ model Order {
   userId          String
   providerId      String
   status          OrderStatus @default(PLACED)
+  paymentStatus   PaymentStatus @default(UNPAID)
+  transactionId   String?
   totalAmount     Float
   deliveryAddress String
   note            String?
@@ -38,4 +40,10 @@ enum OrderStatus {
   READY
   DELIVERED
   CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  FAILED
 }

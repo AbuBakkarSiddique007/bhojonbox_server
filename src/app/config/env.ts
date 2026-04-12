@@ -16,6 +16,8 @@ interface EnvConfig {
 	BASE_URL?: string;
 	ADMIN_EMAIL?: string;
 	ADMIN_PASSWORD?: string;
+	STRIPE_SECRET_KEY?: string;
+	STRIPE_WEBHOOK_SECRET?: string;
 	[key: string]: any;
 }
 
@@ -47,6 +49,8 @@ const loadEnvVariables = (): EnvConfig => {
 		BASE_URL: process.env.BASE_URL || '',
 		ADMIN_EMAIL: adminEmail,
 		ADMIN_PASSWORD: adminPassword,
+		STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || '',
+		STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET || '',
 	};
 };
 

@@ -9,6 +9,7 @@ import { mealRouter } from "./app/modules/meal/meal.route.js";
 import { orderRouter } from "./app/modules/order/order.route.js";
 import { reviewRouter } from "./app/modules/review/review.route.js";
 import { adminRouter } from "./app/modules/admin/admin.route.js";
+import { paymentRouter } from "./app/modules/payment/payment.route.js";
 import { notFound } from "./app/middleware/notFound.js";
 import globalErrorHandler from "./app/middleware/globalErrorHandler.js";
 
@@ -28,6 +29,9 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
+
+// Stripe Webhook needs raw body - must be defined before express.json():
+app.use("/api/payment/webhook", express.raw({ type: "application/json" }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -56,6 +60,8 @@ app.use("/api/reviews", reviewRouter);
 // Admin routes
 app.use("/api/admin", adminRouter);
 
+// Payment routes
+app.use("/api/payment", paymentRouter);
 
 // Health check :
 app.get("/", (req: Request, res: Response) => {

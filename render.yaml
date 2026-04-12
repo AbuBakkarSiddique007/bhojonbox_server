@@ -23,3 +23,7 @@ services:
         value: https://bhojonbox-server.onrender.com
       - key: NODE_ENV
         value: production
+      - key: STRIPE_SECRET_KEY
+        value: "<set-in-render-dashboard>"
+      - key: STRIPE_WEBHOOK_SECRET
+        value: "<set-in-render-dashboard>"
