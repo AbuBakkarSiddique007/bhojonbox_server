@@ -19,6 +19,24 @@ const getSuggestions = async (req: Request, res: Response) => {
   }
 };
 
+const chat = async (req: Request, res: Response) => {
+  try {
+    const { messages, userContext } = req.body;
+    const reply = await aiService.getChatResponse(messages, userContext);
+    res.status(httpStatus.OK).json({
+      success: true,
+      message: "Chat response retrieved successfully",
+      data: reply,
+    });
+  } catch (error: any) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+
 export const aiController = {
   getSuggestions,
+  chat,
 };

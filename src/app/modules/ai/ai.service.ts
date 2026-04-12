@@ -72,6 +72,59 @@ const getSearchSuggestions = async (q: string) => {
   }
 };
 
+const getChatResponse = async (messages: string[], userContext?: { name: string, role: string } | null) => {
+  // 1. Construct conversational history for Groq
+  const history = messages.map((m, i) => ({
+    role: i % 2 === 0 ? "user" : "assistant",
+    content: m
+  }));
+
+  const userIdentity = userContext?.name 
+    ? `The patron you are speaking with is "${userContext.name}" (Role: ${userContext.role}). Address them respectfully.`
+    : `The patron is currently a Guest (not logged in). Proactively suggest registration if they want to buy or sell.`;
+
+  try {
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: `You are the "BhojonBox Concierge", a premium, sophisticated AI guide for the BhojonBox food delivery platform. 
+
+          Context: ${userIdentity}
+
+          Core Guidelines:
+          - Brand Tone: Obsidian & Gold, Executive, Culinary, Cultivated.
+          - Role: Help users navigate the site and answer "How-to" questions.
+          
+          Website Knowledge Base:
+          1. **Authentication**: Users can login at "/login" or register at "/register". 
+          2. **Roles**: We have "customers" (who buy) and "providers" (who sell).
+          3. **How to Register**: Click the Register button in the header. Choose your role during signup.
+          4. **How to Post a Meal**: Only "providers" can do this. Log in as a Provider, go to "Provider Dashboard" -> "Menu", and click "Add Meal".
+          5. **How to Buy**: Browse "/meals", add to cart, and follow the checkout process. We support Stripe Online Payment and Cash on Delivery.
+          6. **Orders**: Customers track orders at "/customer-dashboard/orders". Providers manage incoming orders at "/provider-dashboard/orders".
+          
+          Conversation Rules:
+          - Be polite and helpful.
+          - CRITICAL: When suggesting a page, specify the EXACT route starting with '/' (e.g., "Visit /meals to explore"). These will be automatically converted to clickable links for the user.
+          - If asked about something outside of food or BhojonBox, gracefully redirect: "As your culinary concierge, I specialize in navigating the BhojonBox collections. Perhaps you'd like to explore our latest meals?"
+          - Keep responses concise but "high-end".`
+        },
+        ...(history as any)
+      ],
+      model: "llama-3-8b-8192",
+      temperature: 0.7,
+      max_tokens: 500
+    });
+
+    return chatCompletion.choices[0]?.message?.content || "My apologies, I am momentarily indisposed. How else may I assist you?";
+  } catch (error) {
+    console.error("Groq Chat Error:", error);
+    return "I am currently attending to multiple culinary engagements. Please allow me a moment and try again.";
+  }
+};
+
 export const aiService = {
-  getSearchSuggestions
+  getSearchSuggestions,
+  getChatResponse
 };
