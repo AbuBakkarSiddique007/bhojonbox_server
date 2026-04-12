@@ -48,8 +48,8 @@ const getSearchSuggestions = async (q: string) => {
           content: q
         }
       ],
-      model: "llama3-8b-8192", 
-      temperature: 0.2, 
+      model: "llama-3.1-8b-instant", // High-performance Llama 3.1
+      temperature: 0.2, // Low temperature for consistent suggestions
       max_tokens: 150,
       response_format: { type: "json_object" }
     });
@@ -121,7 +121,7 @@ const getChatResponse = async (messages: string[], userContext?: { name: string,
         },
         ...(history as any)
       ],
-      model: "llama3-70b-8192", 
+      model: "llama-3.3-70b-versatile", 
       temperature: 0.7,
       max_tokens: 500
     });
