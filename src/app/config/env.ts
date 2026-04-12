@@ -18,6 +18,7 @@ interface EnvConfig {
 	ADMIN_PASSWORD?: string;
 	STRIPE_SECRET_KEY?: string;
 	STRIPE_WEBHOOK_SECRET?: string;
+	GROQ_API_KEY?: string;
 	[key: string]: any;
 }
 
@@ -51,6 +52,7 @@ const loadEnvVariables = (): EnvConfig => {
 		ADMIN_PASSWORD: adminPassword,
 		STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || '',
 		STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET || '',
+		GROQ_API_KEY: process.env.GROQ_API_KEY || '',
 	};
 };
 

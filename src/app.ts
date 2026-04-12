@@ -10,6 +10,7 @@ import { orderRouter } from "./app/modules/order/order.route.js";
 import { reviewRouter } from "./app/modules/review/review.route.js";
 import { adminRouter } from "./app/modules/admin/admin.route.js";
 import { paymentRouter } from "./app/modules/payment/payment.route.js";
+import { aiRouter } from "./app/modules/ai/ai.route.js";
 import { notFound } from "./app/middleware/notFound.js";
 import globalErrorHandler from "./app/middleware/globalErrorHandler.js";
 
@@ -62,6 +63,9 @@ app.use("/api/admin", adminRouter);
 
 // Payment routes
 app.use("/api/payment", paymentRouter);
+
+// AI routes
+app.use("/api/ai", aiRouter);
 
 // Health check :
 app.get("/", (req: Request, res: Response) => {

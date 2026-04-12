@@ -23,6 +23,11 @@ const createPaymentIntent = async (orderId: string, userId: string) => {
 
   const amount = Math.round(order.totalAmount * 100);
 
+  // Stripe minimum amount requirement (approx $0.50 USD):
+  if (order.totalAmount < 65) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Online payment requires a minimum order of ৳65. Please add more items or use Cash on Delivery.");
+  }
+
   const paymentIntent = await stripe.paymentIntents.create({
     amount,
     currency: "bdt",
