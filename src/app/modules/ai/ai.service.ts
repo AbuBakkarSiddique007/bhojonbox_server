@@ -48,8 +48,8 @@ const getSearchSuggestions = async (q: string) => {
           content: q
         }
       ],
-      model: "llama-3-8b-8192", // Fast and efficient for suggestions
-      temperature: 0.2, // Low temperature for consistent suggestions
+      model: "llama3-8b-8192", 
+      temperature: 0.2, 
       max_tokens: 150,
       response_format: { type: "json_object" }
     });
@@ -84,7 +84,16 @@ const getChatResponse = async (messages: string[], userContext?: { name: string,
     : `The patron is currently a Guest (not logged in). Proactively suggest registration if they want to buy or sell.`;
 
   try {
-    const chatCompletion = await groq.chat.completions.create({
+    // Late-binding check for API key to ensure Render environment sync
+    const apiKey = envVars.GROQ_API_KEY || process.env.GROQ_API_KEY;
+    if (!apiKey) {
+      console.error("AI Service Error: GROQ_API_KEY is missing from environment variables.");
+      return "I am currently initializing my culinary knowledge. Please try again in a few moments.";
+    }
+
+    const groqInstance = new Groq({ apiKey });
+    
+    const chatCompletion = await groqInstance.chat.completions.create({
       messages: [
         {
           role: "system",
@@ -112,14 +121,14 @@ const getChatResponse = async (messages: string[], userContext?: { name: string,
         },
         ...(history as any)
       ],
-      model: "llama-3-8b-8192",
+      model: "llama3-70b-8192", 
       temperature: 0.7,
       max_tokens: 500
     });
 
     return chatCompletion.choices[0]?.message?.content || "My apologies, I am momentarily indisposed. How else may I assist you?";
-  } catch (error) {
-    console.error("Groq Chat Error:", error);
+  } catch (error: any) {
+    console.error("Groq Chat Error:", error?.response?.data || error?.message || error);
     return "I am currently attending to multiple culinary engagements. Please allow me a moment and try again.";
   }
 };
