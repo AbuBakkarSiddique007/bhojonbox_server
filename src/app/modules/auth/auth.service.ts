@@ -89,14 +89,14 @@ const findUserById = async (id: string) => {
     return prisma.user.findUnique({
         where: { id },
         select: {
-            id: true, 
-            name: true, 
-            email: true, 
+            id: true,
+            name: true,
+            email: true,
             role: true,
-            phone: true, 
-            address: true, 
+            phone: true,
+            address: true,
             avatar: true,
-            isActive: true, 
+            isActive: true,
             createdAt: true,
         },
     });
@@ -106,22 +106,23 @@ const findUserById = async (id: string) => {
 // Update profile fields:
 const updateUser = async (
     id: string,
-    data: { 
-        name?: string; 
-        phone?: string; 
-        address?: string; 
-        avatar?: string }
+    data: {
+        name?: string;
+        phone?: string;
+        address?: string;
+        avatar?: string
+    }
 ) => {
     return prisma.user.update({
         where: { id },
         data,
         select: {
-            id: true, 
-            name: true, 
-            email: true, 
+            id: true,
+            name: true,
+            email: true,
             role: true,
-            phone: true, 
-            address: true, 
+            phone: true,
+            address: true,
             avatar: true,
         },
     });
