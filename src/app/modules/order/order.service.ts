@@ -1,7 +1,7 @@
 import { prisma } from "../../lib/prisma.js";
+import { OrderStatus, Prisma } from "@prisma/client";
 import httpStatus from 'http-status';
 import AppError from '../../errorHelpers/AppError.js';
-import { OrderStatus } from "@prisma/client";
 
 
 const createOrder = async (userId: string, data: {
@@ -26,8 +26,8 @@ const createOrder = async (userId: string, data: {
 
     // 2. Calculate total amount based on meal prices and quantities:
     const totalAmount = data.items.reduce((sum: number, item: { mealId: string; quantity: number }) => {
-        const meal = meals.find((m: any) => m.id === item.mealId);
-        return sum + (meal!.price * item.quantity);
+        const meal = meals.find((m) => m.id === item.mealId);
+        return sum + ((meal?.price ?? 0) * item.quantity);
     }, 0);
 
     const order = await prisma.order.create({
@@ -39,7 +39,7 @@ const createOrder = async (userId: string, data: {
             totalAmount,
             items: {
                     create: data.items.map((item) => {
-                    const meal = meals.find((m: any) => m.id === item.mealId)!;
+                    const meal = meals.find((m) => m.id === item.mealId)!;
                     return {
                         mealId: item.mealId,
                         quantity: item.quantity,
@@ -142,9 +142,9 @@ const getProviderOrders = async (userId: string, status?: string) => {
 
     if (!profile) throw new AppError(httpStatus.NOT_FOUND, "Provider profile not found");
 
-    const where: any = { providerId: profile.id };
+    const where: Prisma.OrderWhereInput = { providerId: profile.id };
 
-    if (status) where.status = status;
+    if (status) where.status = status as OrderStatus;
 
     const orders = await prisma.order.findMany({
         where,

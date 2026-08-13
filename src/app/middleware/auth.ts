@@ -25,7 +25,7 @@ export interface AuthRequest extends Request {
 
 // Check if user is logged in:
 export const authenticate = async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -53,7 +53,7 @@ export const authenticate = async (
       return;
     }
 
-    req.user = user;
+    (req as AuthRequest).user = user;
     next();
   } catch {
     res.status(401).json({ message: "Invalid token" });

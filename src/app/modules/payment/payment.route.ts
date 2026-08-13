@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post(
   "/create-intent",
-  authenticate as any,
+  authenticate,
   paymentController.createIntent
 );
 

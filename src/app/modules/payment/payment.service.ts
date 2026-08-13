@@ -3,7 +3,7 @@ import { prisma } from "../../lib/prisma.js";
 import { envVars } from "../../config/env.js";
 import httpStatus from "http-status";
 import AppError from "../../errorHelpers/AppError.js";
-import { OrderStatus, PaymentStatus } from "@prisma/client";
+import { PaymentStatus } from "@prisma/client";
 
 const stripe = new Stripe(envVars.STRIPE_SECRET_KEY as string);
 
@@ -46,17 +46,18 @@ const createPaymentIntent = async (orderId: string, userId: string) => {
 
 const handleWebhook = async (signature: string, payload: Buffer) => {
   const webhookSecret = envVars.STRIPE_WEBHOOK_SECRET as string;
-  let event: any;
+  let event: Stripe.Event;
 
   try {
     event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
-  } catch (err: any) {
-    throw new AppError(httpStatus.BAD_REQUEST, `Webhook Error: ${err.message}`);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    throw new AppError(httpStatus.BAD_REQUEST, `Webhook Error: ${message}`);
   }
 
   if (event.type === "payment_intent.succeeded") {
-    const paymentIntent = event.data.object as any;
-    const orderId = paymentIntent.metadata.orderId;
+    const paymentIntent = event.data.object as Stripe.PaymentIntent;
+    const orderId = paymentIntent.metadata?.orderId;
 
     if (orderId) {
       await prisma.order.update({

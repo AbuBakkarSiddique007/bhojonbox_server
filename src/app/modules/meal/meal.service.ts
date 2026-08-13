@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma.js";
+import { Prisma } from "@prisma/client";
 import status from 'http-status';
 import AppError from '../../errorHelpers/AppError.js';
 import paginationAndSortingHelper from "../../utils/sortingAndPaginationHelpers.js";
@@ -13,7 +14,7 @@ const getAllMeals = async (query: {
     page?: string;
     limit?: string;
 }) => {
-    const where: any = {
+    const where: Prisma.MealWhereInput = {
         isAvailable: true,
         provider: { user: { isActive: true } },
     };
