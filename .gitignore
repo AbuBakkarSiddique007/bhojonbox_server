@@ -1,20 +1,20 @@
 node_modules
-
-
-
 .env
-
-/generated/prisma
-generated
- /src/generated/prisma
-
+.env*
+!.env.example
 
 # Build outputs
- build
- dist
- 
- 
+dist
+dist/
+build
+build/
 
+# Prisma generated
+/generated
+generated
+/src/generated/prisma
+
+# Vercel / IDE
 .vercel
-.vercel
-.env*.local
+.vscode
+*.log
